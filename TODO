@@ -1,0 +1,23 @@
+- users
+    - create with: userName, password, id, email
+    - update: userName, password
+    - delete
+- sugarLevel
+    - create with fields: value, type, dateTime, note, userId
+    - read last N, from time1 to time2, last month ex.
+    - update: all fields ex userId
+    - delete
+- insulin
+    - create with fields: value, type, dateTime, note, userId
+    - read last N, from time1 to time2, last month ex.
+    - update: all fields ex userId
+    - delete
+- pages
+    - login page, reset/forgot password, demo?
+    - main page: show last actions, add new action, history/graphs, user settings
+- security
+    - ssl
+    - spring security
+    - user token?
+- caching
+- scheduled reports
