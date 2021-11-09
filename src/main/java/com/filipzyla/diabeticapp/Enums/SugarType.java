@@ -10,4 +10,8 @@ public enum SugarType {
     SugarType(String s){
         msg=s;
     }
+
+    public String getMsg() {
+        return msg;
+    }
 }

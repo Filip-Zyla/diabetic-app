@@ -1,4 +1,4 @@
-package com.filipzyla.diabeticapp;
+package com.filipzyla.diabeticapp.views;
 
 import com.filipzyla.diabeticapp.Enums.InsulinType;
 import com.filipzyla.diabeticapp.Enums.MeasurementType;
@@ -21,8 +21,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import java.time.Duration;
 import java.time.LocalDateTime;
 
-@Route("home")
-public class HomeUserView extends VerticalLayout {
+@Route("add")
+public class AddMeasurementsView extends VerticalLayout {
 
     @Autowired
     private SugarRepository sugarRepository;
@@ -42,7 +42,7 @@ public class HomeUserView extends VerticalLayout {
     ComboBox comboBoxInsulinType = new ComboBox("Type");
     Button buttonCommitInsulin = new Button("Save", save -> saveInsulin());
 
-    public HomeUserView(){
+    public AddMeasurementsView(){
         comboBoxMeasurementType.setItems(MeasurementType.values());
 
         comboBoxMeasurementType.addValueChangeListener(event -> {

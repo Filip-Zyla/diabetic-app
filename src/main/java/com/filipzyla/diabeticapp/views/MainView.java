@@ -1,4 +1,4 @@
-package com.filipzyla.diabeticapp;
+package com.filipzyla.diabeticapp.views;
 
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
@@ -10,7 +10,7 @@ import com.vaadin.flow.router.Route;
 public class MainView extends VerticalLayout {
     public MainView(){
         Label labelMain = new Label("There should be login page");
-        Button buttonUserMainPage = new Button("User main page", event -> UI.getCurrent().navigate("home"));
+        Button buttonUserMainPage = new Button("User main page", event -> UI.getCurrent().navigate("main"));
 
         add(labelMain, buttonUserMainPage);
     }

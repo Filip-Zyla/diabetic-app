@@ -1,12 +1,17 @@
 package com.filipzyla.diabeticapp.Enums;
 
 public enum SugarUnits {
-    MILLI_GRAM("mg/dl"), MILLI_MOL("mmol/l");
+    MILLI_GRAM("mg/dl"),
+    MILLI_MOL("mmol/l");
 
-    String msg;
+    private String msg;
 
     SugarUnits(String s){
         msg=s;
+    }
+
+    public String getMsg() {
+        return msg;
     }
 
     public interface UnitsRatio{
