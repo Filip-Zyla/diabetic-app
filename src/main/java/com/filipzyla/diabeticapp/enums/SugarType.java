@@ -1,4 +1,4 @@
-package com.filipzyla.diabeticapp.Enums;
+package com.filipzyla.diabeticapp.enums;
 
 public enum SugarType {
     BEFORE_MEAL("Before meal"),

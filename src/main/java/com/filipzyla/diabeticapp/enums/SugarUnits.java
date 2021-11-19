@@ -1,4 +1,4 @@
-package com.filipzyla.diabeticapp.Enums;
+package com.filipzyla.diabeticapp.enums;
 
 public enum SugarUnits {
     MILLI_GRAM("mg/dl"),

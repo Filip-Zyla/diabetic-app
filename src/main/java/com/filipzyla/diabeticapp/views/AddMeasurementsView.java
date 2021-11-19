@@ -1,9 +1,9 @@
 package com.filipzyla.diabeticapp.views;
 
-import com.filipzyla.diabeticapp.Enums.InsulinType;
-import com.filipzyla.diabeticapp.Enums.MeasurementType;
-import com.filipzyla.diabeticapp.Enums.SugarType;
-import com.filipzyla.diabeticapp.Enums.SugarUnits;
+import com.filipzyla.diabeticapp.enums.InsulinType;
+import com.filipzyla.diabeticapp.enums.MeasurementType;
+import com.filipzyla.diabeticapp.enums.SugarType;
+import com.filipzyla.diabeticapp.enums.SugarUnits;
 import com.filipzyla.diabeticapp.insulin.Insulin;
 import com.filipzyla.diabeticapp.insulin.InsulinRepository;
 import com.filipzyla.diabeticapp.suger.Sugar;

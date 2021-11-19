@@ -1,5 +1,6 @@
 package com.filipzyla.diabeticapp.views;
 
+import com.filipzyla.diabeticapp.CustomDateTimeFormatter;
 import com.filipzyla.diabeticapp.insulin.Insulin;
 import com.filipzyla.diabeticapp.insulin.InsulinRepository;
 import com.filipzyla.diabeticapp.suger.Sugar;
@@ -15,7 +16,6 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.Route;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import java.time.format.DateTimeFormatter;
 import java.util.Optional;
 
 @Route("main")
@@ -26,9 +26,8 @@ public class MainUserView extends VerticalLayout {
     @Autowired
     private InsulinRepository insulinRepository;
 
-    private final DateTimeFormatter formatter;
     private final VerticalLayout layoutLastSugar = new VerticalLayout(), layoutLastInsulin = new VerticalLayout();
-    private final HorizontalLayout buttonsLayout = new HorizontalLayout(), layoutLastMeasurements = new HorizontalLayout();
+    private final HorizontalLayout layoutButtons = new HorizontalLayout(), layoutLastMeasurements = new HorizontalLayout();
     private final TopMenuBar topMenuBar = new TopMenuBar();
     private Button buttonAddMeasurement;
     private Button buttonShowHistory;
@@ -39,8 +38,6 @@ public class MainUserView extends VerticalLayout {
         this.sugarRepository = sugarRepository;
         this.insulinRepository = insulinRepository;
 
-        formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy kk:mm");
-
         addLastSugar();
         addLastInsulin();
         lowerButtons();
@@ -48,7 +45,7 @@ public class MainUserView extends VerticalLayout {
         layoutLastMeasurements.add(layoutLastSugar, layoutLastInsulin);
         layoutLastMeasurements.setSizeFull();
 
-        add(topMenuBar.getBarLayout(), layoutLastMeasurements, buttonsLayout);
+        add(topMenuBar.getBarLayout(), layoutLastMeasurements, layoutButtons);
     }
 
     private void addLastSugar() {
@@ -59,7 +56,7 @@ public class MainUserView extends VerticalLayout {
             labelSugarMain = new H3("Last sugar");
             labelSugar = new H5(sugarOpt.get().getSugar().toString() + " " + sugarOpt.get().getUnits().getMsg());
             labelTypeSug = new H5(sugarOpt.get().getType().getMsg());
-            labelTimeSug = new H5(sugarOpt.get().getTime().format(formatter));
+            labelTimeSug = new H5(sugarOpt.get().getTime().format(CustomDateTimeFormatter.formatter));
             layoutLastSugar.add(labelSugarMain, labelSugar, labelTypeSug, labelTimeSug);
         }
     }
@@ -72,17 +69,17 @@ public class MainUserView extends VerticalLayout {
             labelInsulinMain = new H3("Last insulin");
             labelInsulin = new H5(insulinOpt.get().getInsulin().toString() + " units");
             labelTypeIns = new H5(insulinOpt.get().getType().getMsg());
-            labelTimeIns = new H5(insulinOpt.get().getTime().format(formatter));
+            labelTimeIns = new H5(insulinOpt.get().getTime().format(CustomDateTimeFormatter.formatter));
             layoutLastInsulin.add(labelInsulinMain, labelInsulin, labelTypeIns, labelTimeIns);
         }
     }
 
     private void lowerButtons() {
-        buttonsLayout.setWidthFull();
-        buttonsLayout.setJustifyContentMode(JustifyContentMode.CENTER);
-        buttonsLayout.setAlignSelf(Alignment.STRETCH);
+        layoutButtons.setWidthFull();
+        layoutButtons.setJustifyContentMode(JustifyContentMode.CENTER);
+        layoutButtons.setAlignSelf(Alignment.STRETCH);
         buttonAddMeasurement = new Button("Add new", new Icon(VaadinIcon.PLUS), event -> UI.getCurrent().navigate("add"));
         buttonShowHistory = new Button("History", new Icon(VaadinIcon.ARCHIVE), event -> UI.getCurrent().navigate("history"));
-        buttonsLayout.add(buttonAddMeasurement, buttonShowHistory);
+        layoutButtons.add(buttonAddMeasurement, buttonShowHistory);
     }
 }

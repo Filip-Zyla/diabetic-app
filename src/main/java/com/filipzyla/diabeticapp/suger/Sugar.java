@@ -1,7 +1,7 @@
 package com.filipzyla.diabeticapp.suger;
 
-import com.filipzyla.diabeticapp.Enums.SugarType;
-import com.filipzyla.diabeticapp.Enums.SugarUnits;
+import com.filipzyla.diabeticapp.enums.SugarType;
+import com.filipzyla.diabeticapp.enums.SugarUnits;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
