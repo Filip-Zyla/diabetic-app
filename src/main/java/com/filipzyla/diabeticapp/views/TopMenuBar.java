@@ -9,8 +9,8 @@ import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 
 public class TopMenuBar {
-    private HorizontalLayout barLayout;
-    private Button homePageButton, settingButton, logoutButton;
+    private final HorizontalLayout barLayout;
+    private final Button homePageButton, settingButton, logoutButton;
 
     public TopMenuBar() {
         homePageButton = new Button("Home", new Icon(VaadinIcon.HOME), event -> UI.getCurrent().navigate("main"));

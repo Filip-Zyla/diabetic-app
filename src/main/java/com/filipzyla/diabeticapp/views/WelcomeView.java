@@ -8,9 +8,13 @@ import com.vaadin.flow.router.Route;
 
 @Route("")
 public class WelcomeView extends VerticalLayout {
+
+    private final H2 labelWelcome;
+    private final Button buttonUserMainPage;
+
     public WelcomeView() {
-        H2 labelWelcome = new H2("Welcome to my app");
-        Button buttonUserMainPage = new Button("User main page", event -> UI.getCurrent().navigate("main"));
+        labelWelcome = new H2("Welcome to my app");
+        buttonUserMainPage = new Button("User main page", event -> UI.getCurrent().navigate("main"));
         setAlignItems(Alignment.CENTER);
 
         add(labelWelcome, buttonUserMainPage);

@@ -28,20 +28,31 @@ public class AddMeasurementsView extends VerticalLayout {
     @Autowired
     private InsulinRepository insulinRepository;
 
-    ComboBox comboBoxMeasurementType = new ComboBox("What do you want to see?");
-
-    NumberField numFieldSugar = new NumberField("Sugar");
-    ComboBox comboBoxSugarType = new ComboBox("Type");
-    ComboBox comboBoxSugarUnitsType = new ComboBox("Units");
-    DateTimePicker dateTimePicker = new DateTimePicker("Time");
-    Button buttonCommitSugar = new Button("Save", save -> saveSugar());
-
-    NumberField numFieldInsulin = new NumberField("Insulin");
-    ComboBox comboBoxInsulinType = new ComboBox("Type");
-    Button buttonCommitInsulin = new Button("Save", save -> saveInsulin());
+    private final ComboBox<MeasurementType> comboBoxMeasurementType;
+    private final NumberField numFieldSugar;
+    private final ComboBox<SugarType> comboBoxSugarType;
+    private final ComboBox<SugarUnits> comboBoxSugarUnitsType;
+    private final DateTimePicker dateTimePicker;
+    private final Button buttonCommitSugar;
+    private final NumberField numFieldInsulin;
+    private final ComboBox<InsulinType> comboBoxInsulinType;
+    private final Button buttonCommitInsulin;
+    private final TopMenuBar topMenuBar = new TopMenuBar();
 
     public AddMeasurementsView() {
+        comboBoxMeasurementType = new ComboBox("What do you want to add?");
         comboBoxMeasurementType.setItems(MeasurementType.values());
+
+        dateTimePicker = new DateTimePicker("Time");
+
+        numFieldSugar = new NumberField("Sugar");
+        comboBoxSugarType = new ComboBox("Type");
+        comboBoxSugarUnitsType = new ComboBox("Units");
+        buttonCommitSugar = new Button("Save", save -> saveSugar());
+
+        numFieldInsulin = new NumberField("Insulin");
+        comboBoxInsulinType = new ComboBox("Type");
+        buttonCommitInsulin = new Button("Save", save -> saveInsulin());
 
         comboBoxMeasurementType.addValueChangeListener(event -> {
             remove(numFieldSugar, comboBoxSugarType, comboBoxSugarUnitsType, dateTimePicker,
@@ -49,7 +60,9 @@ public class AddMeasurementsView extends VerticalLayout {
             if (event.getValue() == MeasurementType.SUGAR) {
                 numFieldSugar.setStep(1);
                 comboBoxSugarType.setItems(SugarType.values());
+                comboBoxSugarType.setItemLabelGenerator(SugarType::getMsg);
                 comboBoxSugarUnitsType.setItems(SugarUnits.values());
+                comboBoxSugarUnitsType.setItemLabelGenerator(SugarUnits::getMsg);
                 dateTimePicker.setStep(Duration.ofMinutes(1));
                 dateTimePicker.setValue(LocalDateTime.now());
 
@@ -58,6 +71,7 @@ public class AddMeasurementsView extends VerticalLayout {
             else if (event.getValue() == MeasurementType.INSULIN) {
                 numFieldInsulin.setStep(1);
                 comboBoxInsulinType.setItems(InsulinType.values());
+                comboBoxInsulinType.setItemLabelGenerator(InsulinType::getMsg);
                 dateTimePicker.setStep(Duration.ofMinutes(1));
                 dateTimePicker.setValue(LocalDateTime.now());
 
@@ -65,21 +79,20 @@ public class AddMeasurementsView extends VerticalLayout {
             }
         });
 
-        add(new TopMenuBar().getBarLayout(), comboBoxMeasurementType);
+        setAlignItems(Alignment.CENTER);
+        add(topMenuBar.getBarLayout(), comboBoxMeasurementType);
 
 
     }
 
     private void saveSugar() {
-        Sugar sugar = new Sugar(numFieldSugar.getValue(), (SugarType) comboBoxSugarType.getValue(),
-                (SugarUnits) comboBoxSugarUnitsType.getValue(), dateTimePicker.getValue());
+        Sugar sugar = new Sugar(numFieldSugar.getValue(), comboBoxSugarType.getValue(), comboBoxSugarUnitsType.getValue(), dateTimePicker.getValue());
         sugarRepository.save(sugar);
         UI.getCurrent().getPage().reload();
     }
 
     private void saveInsulin() {
-        Insulin insulin = new Insulin(numFieldInsulin.getValue().intValue(), (InsulinType) comboBoxInsulinType.getValue(),
-                dateTimePicker.getValue());
+        Insulin insulin = new Insulin(numFieldInsulin.getValue().intValue(), comboBoxInsulinType.getValue(), dateTimePicker.getValue());
         insulinRepository.save(insulin);
         UI.getCurrent().getPage().reload();
     }

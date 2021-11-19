@@ -6,61 +6,83 @@ import com.filipzyla.diabeticapp.suger.Sugar;
 import com.filipzyla.diabeticapp.suger.SugarRepository;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
-import com.vaadin.flow.component.html.Label;
+import com.vaadin.flow.component.html.H3;
+import com.vaadin.flow.component.html.H5;
+import com.vaadin.flow.component.icon.Icon;
+import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.Route;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.time.format.DateTimeFormatter;
 import java.util.Optional;
 
-
 @Route("main")
 public class MainUserView extends VerticalLayout {
 
+    @Autowired
+    private SugarRepository sugarRepository;
+    @Autowired
+    private InsulinRepository insulinRepository;
+
+    private final DateTimeFormatter formatter;
+    private final VerticalLayout layoutLastSugar = new VerticalLayout(), layoutLastInsulin = new VerticalLayout();
+    private final HorizontalLayout buttonsLayout = new HorizontalLayout(), layoutLastMeasurements = new HorizontalLayout();
+    private final TopMenuBar topMenuBar = new TopMenuBar();
+    private Button buttonAddMeasurement;
+    private Button buttonShowHistory;
+    private H3 labelSugarMain, labelInsulinMain;
+    private H5 labelSugar, labelTypeSug, labelTimeSug, labelInsulin, labelTypeIns, labelTimeIns;
+
     public MainUserView(SugarRepository sugarRepository, InsulinRepository insulinRepository) {
+        this.sugarRepository = sugarRepository;
+        this.insulinRepository = insulinRepository;
 
+        formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy kk:mm");
 
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy kk:mm");
+        addLastSugar();
+        addLastInsulin();
+        lowerButtons();
 
-        VerticalLayout layoutLastSugar = new VerticalLayout();
+        layoutLastMeasurements.add(layoutLastSugar, layoutLastInsulin);
+        layoutLastMeasurements.setSizeFull();
+
+        add(topMenuBar.getBarLayout(), layoutLastMeasurements, buttonsLayout);
+    }
+
+    private void addLastSugar() {
         layoutLastSugar.setWidth("50%");
         layoutLastSugar.setAlignItems(Alignment.CENTER);
         Optional<Sugar> sugarOpt = Optional.ofNullable(sugarRepository.findFirstByOrderByTimeAsc());
         if (sugarOpt.isPresent()) {
-            Label labelSugarMain = new Label("Last sugar");
-            Label labelSugar = new Label(sugarOpt.get().getSugar().toString() + " " + sugarOpt.get().getUnits().getMsg());
-            Label labelTypeSug = new Label(sugarOpt.get().getType().getMsg());
-            Label labelTimeSug = new Label(sugarOpt.get().getTime().format(formatter));
+            labelSugarMain = new H3("Last sugar");
+            labelSugar = new H5(sugarOpt.get().getSugar().toString() + " " + sugarOpt.get().getUnits().getMsg());
+            labelTypeSug = new H5(sugarOpt.get().getType().getMsg());
+            labelTimeSug = new H5(sugarOpt.get().getTime().format(formatter));
             layoutLastSugar.add(labelSugarMain, labelSugar, labelTypeSug, labelTimeSug);
         }
+    }
 
-        VerticalLayout layoutLastInsulin = new VerticalLayout();
+    private void addLastInsulin() {
         layoutLastInsulin.setWidth("50%");
         layoutLastInsulin.setAlignItems(Alignment.CENTER);
         Optional<Insulin> insulinOpt = Optional.ofNullable(insulinRepository.findFirstByOrderByTimeAsc());
         if (insulinOpt.isPresent()) {
-            Label labelInsulinMain = new Label("Last insulin");
-            Label labelInsulin = new Label(insulinOpt.get().getInsulin().toString() + " units");
-            Label labelTypeIns = new Label(insulinOpt.get().getType().getMsg());
-            Label labelTimeIns = new Label(insulinOpt.get().getTime().format(formatter));
+            labelInsulinMain = new H3("Last insulin");
+            labelInsulin = new H5(insulinOpt.get().getInsulin().toString() + " units");
+            labelTypeIns = new H5(insulinOpt.get().getType().getMsg());
+            labelTimeIns = new H5(insulinOpt.get().getTime().format(formatter));
             layoutLastInsulin.add(labelInsulinMain, labelInsulin, labelTypeIns, labelTimeIns);
         }
+    }
 
-        HorizontalLayout buttonsLayout = new HorizontalLayout();
+    private void lowerButtons() {
         buttonsLayout.setWidthFull();
         buttonsLayout.setJustifyContentMode(JustifyContentMode.CENTER);
         buttonsLayout.setAlignSelf(Alignment.STRETCH);
-        Button buttonAddMeasurement = new Button("Add new", event -> UI.getCurrent().navigate("add"));
-        Button buttonShowHistory = new Button("History", event -> UI.getCurrent().navigate("history"));
+        buttonAddMeasurement = new Button("Add new", new Icon(VaadinIcon.PLUS), event -> UI.getCurrent().navigate("add"));
+        buttonShowHistory = new Button("History", new Icon(VaadinIcon.ARCHIVE), event -> UI.getCurrent().navigate("history"));
         buttonsLayout.add(buttonAddMeasurement, buttonShowHistory);
-
-
-        HorizontalLayout layoutLastMeasurements = new HorizontalLayout();
-        layoutLastMeasurements.add(layoutLastSugar, layoutLastInsulin);
-        layoutLastMeasurements.setSizeFull();
-
-
-        add(new TopMenuBar().getBarLayout(), layoutLastMeasurements, buttonsLayout);
     }
 }
