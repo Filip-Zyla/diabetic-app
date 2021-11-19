@@ -1,13 +1,13 @@
 package com.filipzyla.diabeticapp.Enums;
 
 public enum MeasurementType {
-    INSULIN("insulin"),
-    SUGAR("sugar");
+    INSULIN("Insulin"),
+    SUGAR("Sugar");
 
     private String msg;
 
     MeasurementType(String s) {
-        msg=s;
+        msg = s;
     }
 
     public String getMsg() {

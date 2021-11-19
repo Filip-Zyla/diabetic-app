@@ -1,23 +1,30 @@
+!!! Functionality !!!
 - users
     - create with: userName, password, id, email
     - update: userName, password
     - delete
+    - logging, retrieve password
+    - user settings
 - sugarLevel
     - create with fields: value, type,units, dateTime, note, userId
     - read last N, from time1 to time2, last month ex.
-    - update: all fields ex userId
+    - update: all fields
     - delete
 - insulin
     - create with fields: value, type, dateTime, note, userId
     - read last N, from time1 to time2, last month ex.
-    - update: all fields ex userId
+    - update: all fields
     - delete
-- pages
-    - login page, reset/forgot password, demo?
-    - main page: show last actions, add new action, history/graphs, user settings
 - security
     - ssl
     - spring security
     - user token?
 - caching
-- scheduled reports
+- scheduled reports, graphs, charts, set sugar boundaries
+- different languages
+
+!!! UI !!!
+- login page: logging, retrieve password
+- general bar/menu bar with setting, main page redirect, logout, or tabs???
+- main user page: last action/sugar and insulin? showed
+    - adding new action same or other page?

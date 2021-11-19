@@ -2,17 +2,17 @@ package com.filipzyla.diabeticapp.views;
 
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
-import com.vaadin.flow.component.html.Label;
+import com.vaadin.flow.component.html.H2;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.Route;
 
 @Route("")
-public class MainView extends VerticalLayout {
-    public MainView(){
-        Label labelMain = new Label("There should be login page");
+public class WelcomeView extends VerticalLayout {
+    public WelcomeView() {
+        H2 labelWelcome = new H2("Welcome to my app");
         Button buttonUserMainPage = new Button("User main page", event -> UI.getCurrent().navigate("main"));
+        setAlignItems(Alignment.CENTER);
 
-        add(labelMain, buttonUserMainPage);
+        add(labelWelcome, buttonUserMainPage);
     }
-
 }

@@ -1,14 +1,14 @@
 package com.filipzyla.diabeticapp.Enums;
 
 public enum InsulinType {
-    BASE("base"),
-    CORRECT("correct"),
-    MEAL("meal");
+    BASE("Base"),
+    CORRECT("Correction"),
+    MEAL("Food");
 
     private String msg;
 
-    InsulinType(String s){
-        msg=s;
+    InsulinType(String s) {
+        msg = s;
     }
 
     public String getMsg() {
