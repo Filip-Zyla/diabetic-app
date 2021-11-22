@@ -6,9 +6,8 @@
     - logging, retrieve password
     - user settings
 - sugarLevel
-    - create with fields: value, type,units, dateTime, note, userId
+    - cadd note, userId
     - read last N, from time1 to time2, last month ex.
-    - update: all fields
     - delete
 - insulin
     - create with fields: value, type, dateTime, note, userId
@@ -16,7 +15,6 @@
     - update: all fields
     - delete
 - default units of sugar
-- hiostory order by
 - security
     - ssl
     - spring security

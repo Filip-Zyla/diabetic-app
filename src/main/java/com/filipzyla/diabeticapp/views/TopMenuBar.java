@@ -14,7 +14,7 @@ public class TopMenuBar {
 
     public TopMenuBar() {
         homePageButton = new Button("Home", new Icon(VaadinIcon.HOME), event -> UI.getCurrent().navigate("main"));
-        settingButton = new Button("Settings", new Icon(VaadinIcon.OPTIONS), event -> UI.getCurrent().navigate("settings"));
+        settingButton = new Button("Settings", new Icon(VaadinIcon.OPTIONS), event -> UI.getCurrent().navigate(""));
         logoutButton = new Button("Logout", new Icon(VaadinIcon.EXIT), event -> UI.getCurrent().navigate(""));
         barLayout = new HorizontalLayout();
         barLayout.setHeight(50, Unit.PIXELS);

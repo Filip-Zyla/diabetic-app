@@ -66,7 +66,7 @@ public class AddMeasurementsView extends VerticalLayout {
                 dateTimePicker.setStep(Duration.ofMinutes(1));
                 dateTimePicker.setValue(LocalDateTime.now());
 
-                add(numFieldSugar, comboBoxSugarType, comboBoxSugarUnitsType, dateTimePicker, buttonCommitSugar);
+                add(numFieldSugar, comboBoxSugarUnitsType, comboBoxSugarType, dateTimePicker, buttonCommitSugar);
             }
             else if (event.getValue() == MeasurementType.INSULIN) {
                 numFieldInsulin.setStep(1);
