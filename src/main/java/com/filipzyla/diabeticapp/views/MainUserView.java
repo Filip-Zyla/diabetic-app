@@ -1,6 +1,7 @@
 package com.filipzyla.diabeticapp.views;
 
 import com.filipzyla.diabeticapp.CustomDateTimeFormatter;
+import com.filipzyla.diabeticapp.charts.SugarLineChart;
 import com.filipzyla.diabeticapp.insulin.Insulin;
 import com.filipzyla.diabeticapp.insulin.InsulinRepository;
 import com.filipzyla.diabeticapp.suger.Sugar;
@@ -45,7 +46,9 @@ public class MainUserView extends VerticalLayout {
         layoutLastMeasurements.add(layoutLastSugar, layoutLastInsulin);
         layoutLastMeasurements.setSizeFull();
 
-        add(topMenuBar.getBarLayout(), layoutLastMeasurements, layoutButtons);
+        SugarLineChart sugarLineChart = new SugarLineChart(sugarRepository);
+
+        add(topMenuBar.getBarLayout(), layoutLastMeasurements, layoutButtons, sugarLineChart);
     }
 
     private void addLastSugar() {

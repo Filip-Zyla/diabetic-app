@@ -56,14 +56,14 @@ public class HistoryView extends VerticalLayout {
 
         labelHistory = new H2("History");
         datePeriodSelector();
-        Button buttonShowHistory = new Button("Show", event -> refreshHisotryGrid());
+        Button buttonShowHistory = new Button("Show", event -> refreshHistoryGrid());
         sugarGrid();
         insulinGrid();
         setAlignItems(Alignment.CENTER);
         add(topMenuBar.getBarLayout(), labelHistory, layoutDatePeriod, buttonShowHistory, layoutTabs);
     }
 
-    private void refreshHisotryGrid() {
+    private void refreshHistoryGrid() {
         layoutSugar.removeAll();
         layoutInsulin.removeAll();
         layoutTabs.removeAll();
@@ -128,12 +128,12 @@ public class HistoryView extends VerticalLayout {
             sugar.setTime(dateTimePicker.getValue());
             sugarRepository.save(sugar);
             dialog.close();
-            refreshHisotryGrid();
+            refreshHistoryGrid();
         });
         Button buttonDelete = new Button("Delete", save -> {
             sugarRepository.delete(sugar);
             dialog.close();
-            refreshHisotryGrid();
+            refreshHistoryGrid();
         });
         Button buttonClose = new Button("Close", save -> {
             dialog.close();
@@ -189,12 +189,12 @@ public class HistoryView extends VerticalLayout {
             insulin.setTime(dateTimePicker.getValue());
             insulinRepository.save(insulin);
             dialog.close();
-            refreshHisotryGrid();
+            refreshHistoryGrid();
         });
         Button buttonDelete = new Button("Delete", save -> {
             insulinRepository.delete(insulin);
             dialog.close();
-            refreshHisotryGrid();
+            refreshHistoryGrid();
         });
         Button buttonClose = new Button("Close", save -> {
             dialog.close();
@@ -205,5 +205,8 @@ public class HistoryView extends VerticalLayout {
         dialogLayout.add(numField, comboBox, dateTimePicker);
         dialog.add(dialogLayout, buttonLayout);
         add(dialog);
+    }
+
+    private void charts() {
     }
 }

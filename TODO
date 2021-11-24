@@ -6,14 +6,9 @@
     - logging, retrieve password
     - user settings
 - sugarLevel
-    - cadd note, userId
-    - read last N, from time1 to time2, last month ex.
-    - delete
+    - add note, userId
 - insulin
-    - create with fields: value, type, dateTime, note, userId
-    - read last N, from time1 to time2, last month ex.
-    - update: all fields
-    - delete
+    - add note, userId
 - default units of sugar
 - security
     - ssl
