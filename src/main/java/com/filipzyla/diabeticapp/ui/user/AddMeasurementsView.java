@@ -9,6 +9,7 @@ import com.filipzyla.diabeticapp.backend.models.Sugar;
 import com.filipzyla.diabeticapp.backend.service.InsulinService;
 import com.filipzyla.diabeticapp.backend.service.SugarService;
 import com.filipzyla.diabeticapp.ui.components.TopMenuBar;
+import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.datetimepicker.DateTimePicker;
@@ -25,80 +26,79 @@ public class AddMeasurementsView extends VerticalLayout {
 
     private final SugarService sugarService;
     private final InsulinService insulinService;
-
-    private final ComboBox<MeasurementType> comboBoxMeasurementType;
-    private final NumberField numFieldSugar;
-    private final ComboBox<SugarType> comboBoxSugarType;
-    private final ComboBox<SugarUnits> comboBoxSugarUnitsType;
-    private final DateTimePicker dateTimePicker;
-    private final Button buttonCommitSugar;
-    private final NumberField numFieldInsulin;
-    private final ComboBox<InsulinType> comboBoxInsulinType;
-    private final Button buttonCommitInsulin;
+    private final VerticalLayout insulinLayout = new VerticalLayout();
+    private final VerticalLayout sugarLayout = new VerticalLayout();
 
     public AddMeasurementsView(SugarService sugarService, InsulinService insulinService) {
         this.sugarService = sugarService;
         this.insulinService = insulinService;
-        
-        comboBoxMeasurementType = new ComboBox("What do you want to add?");
+
+        ComboBox<MeasurementType> comboBoxMeasurementType = new ComboBox("What do you want to add?");
         comboBoxMeasurementType.setItems(MeasurementType.values());
 
-        dateTimePicker = new DateTimePicker("Time");
-
-        numFieldSugar = new NumberField("Sugar");
-        comboBoxSugarType = new ComboBox("Type");
-        comboBoxSugarUnitsType = new ComboBox("Units");
-        buttonCommitSugar = new Button("Save", save -> saveSugar());
-
-        numFieldInsulin = new NumberField("Insulin");
-        comboBoxInsulinType = new ComboBox("Type");
-        buttonCommitInsulin = new Button("Save", save -> saveInsulin());
-
         comboBoxMeasurementType.addValueChangeListener(event -> {
-            remove(numFieldSugar, comboBoxSugarType, comboBoxSugarUnitsType, dateTimePicker,
-                    buttonCommitSugar, numFieldInsulin, comboBoxInsulinType, buttonCommitInsulin);
-            if (event.getValue() == MeasurementType.SUGAR) {
-                numFieldSugar.setStep(1);
-                comboBoxSugarType.setItems(SugarType.values());
-                comboBoxSugarType.setItemLabelGenerator(SugarType::getMsg);
-                comboBoxSugarUnitsType.setItems(SugarUnits.values());
-                comboBoxSugarUnitsType.setItemLabelGenerator(SugarUnits::getMsg);
-                dateTimePicker.setStep(Duration.ofMinutes(1));
-                dateTimePicker.setValue(LocalDateTime.now());
-
-                add(numFieldSugar, comboBoxSugarUnitsType, comboBoxSugarType, dateTimePicker, buttonCommitSugar);
-            }
-            else if (event.getValue() == MeasurementType.INSULIN) {
-                numFieldInsulin.setStep(1);
-                comboBoxInsulinType.setItems(InsulinType.values());
-                comboBoxInsulinType.setItemLabelGenerator(InsulinType::getMsg);
-                dateTimePicker.setStep(Duration.ofMinutes(1));
-                dateTimePicker.setValue(LocalDateTime.now());
-
-                add(numFieldInsulin, comboBoxInsulinType, dateTimePicker, buttonCommitInsulin);
-            }
+            insulinLayout.removeAll();
+            sugarLayout.removeAll();
+            remove(insulinLayout, sugarLayout);
+            if (event.getValue() == MeasurementType.SUGAR)
+                add(addSugarLayout());
+            else if (event.getValue() == MeasurementType.INSULIN)
+                add(addInsulinLayout());
         });
 
         setAlignItems(Alignment.CENTER);
         add(new TopMenuBar(), comboBoxMeasurementType);
-
-
     }
 
-    private void saveSugar() {
-        Sugar sugar = new Sugar(numFieldSugar.getValue(), comboBoxSugarType.getValue(), comboBoxSugarUnitsType.getValue(), dateTimePicker.getValue());
-        sugarService.save(sugar);
-        remove(numFieldSugar, comboBoxSugarUnitsType, comboBoxSugarType, dateTimePicker, buttonCommitSugar);
-        comboBoxMeasurementType.setValue(null);
-        Notification.show("Saved").setPosition(Notification.Position.MIDDLE);
+    private Component addSugarLayout() {
+        NumberField numField = new NumberField("Sugar");
+        numField.setStep(0.1);
+        ComboBox<SugarUnits> comboBoxUnits = new ComboBox("Units");
+        comboBoxUnits.setItems(SugarUnits.values());
+        comboBoxUnits.setItemLabelGenerator(SugarUnits::getMsg);
+        ComboBox<SugarType> comboBoxType = new ComboBox("Type");
+        comboBoxType.setItems(SugarType.values());
+        comboBoxType.setItemLabelGenerator(SugarType::getMsg);
+        DateTimePicker dateTimePicker = new DateTimePicker("Time");
+        dateTimePicker.setValue(LocalDateTime.now());
+        dateTimePicker.setStep(Duration.ofMinutes(1));
+
+        Button buttonSave = new Button("Save", save -> {
+            Sugar sugar = new Sugar(numField.getValue(), comboBoxType.getValue(), comboBoxUnits.getValue(), dateTimePicker.getValue());
+            sugarService.save(sugar);
+            Notification.show("Saved").setPosition(Notification.Position.MIDDLE);
+            numField.setValue(null);
+            comboBoxType.setValue(null);
+            comboBoxUnits.setValue(null);
+            dateTimePicker.setValue(LocalDateTime.now());
+        });
+
+        sugarLayout.setAlignItems(Alignment.CENTER);
+        sugarLayout.add(numField, comboBoxUnits, comboBoxType, dateTimePicker, buttonSave);
+        return sugarLayout;
     }
 
-    //TODO set to nulls fields
-    private void saveInsulin() {
-        Insulin insulin = new Insulin(numFieldInsulin.getValue().intValue(), comboBoxInsulinType.getValue(), dateTimePicker.getValue());
-        insulinService.save(insulin);
-        remove(numFieldInsulin, comboBoxInsulinType, dateTimePicker, buttonCommitInsulin);
-        comboBoxMeasurementType.setValue(null);
-        Notification.show("Saved").setPosition(Notification.Position.MIDDLE);
+    private Component addInsulinLayout() {
+        NumberField numField = new NumberField("Insulin");
+        numField.setStep(1);
+        ComboBox<InsulinType> comboBoxType = new ComboBox("Type");
+        comboBoxType.setItems(InsulinType.values());
+        comboBoxType.setItemLabelGenerator(InsulinType::getMsg);
+        DateTimePicker dateTimePicker = new DateTimePicker("Time");
+        dateTimePicker.setValue(LocalDateTime.now());
+        dateTimePicker.setStep(Duration.ofMinutes(1));
+
+        Button buttonSave = new Button("Save", save -> {
+            Insulin insulin = new Insulin(numField.getValue().intValue(), comboBoxType.getValue(), dateTimePicker.getValue());
+            insulinService.save(insulin);
+            Notification.show("Saved").setPosition(Notification.Position.MIDDLE);
+            numField.setValue(null);
+            comboBoxType.setValue(null);
+            dateTimePicker.setValue(LocalDateTime.now());
+        });
+
+        insulinLayout.setAlignItems(Alignment.CENTER);
+        insulinLayout.add(numField, comboBoxType, dateTimePicker, buttonSave);
+        return insulinLayout;
     }
 }
