@@ -1,4 +1,4 @@
-package com.filipzyla.diabeticapp.enums;
+package com.filipzyla.diabeticapp.backend.enums;
 
 public enum InsulinType {
     BASE("Base"),

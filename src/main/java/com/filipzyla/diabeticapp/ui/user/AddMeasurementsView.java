@@ -1,21 +1,21 @@
-package com.filipzyla.diabeticapp.views;
+package com.filipzyla.diabeticapp.ui.user;
 
-import com.filipzyla.diabeticapp.enums.InsulinType;
-import com.filipzyla.diabeticapp.enums.MeasurementType;
-import com.filipzyla.diabeticapp.enums.SugarType;
-import com.filipzyla.diabeticapp.enums.SugarUnits;
-import com.filipzyla.diabeticapp.insulin.Insulin;
-import com.filipzyla.diabeticapp.insulin.InsulinRepository;
-import com.filipzyla.diabeticapp.suger.Sugar;
-import com.filipzyla.diabeticapp.suger.SugarRepository;
-import com.vaadin.flow.component.UI;
+import com.filipzyla.diabeticapp.backend.enums.InsulinType;
+import com.filipzyla.diabeticapp.backend.enums.MeasurementType;
+import com.filipzyla.diabeticapp.backend.enums.SugarType;
+import com.filipzyla.diabeticapp.backend.enums.SugarUnits;
+import com.filipzyla.diabeticapp.backend.models.Insulin;
+import com.filipzyla.diabeticapp.backend.models.Sugar;
+import com.filipzyla.diabeticapp.backend.service.InsulinService;
+import com.filipzyla.diabeticapp.backend.service.SugarService;
+import com.filipzyla.diabeticapp.ui.components.TopMenuBar;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.datetimepicker.DateTimePicker;
+import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.NumberField;
 import com.vaadin.flow.router.Route;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
@@ -23,10 +23,8 @@ import java.time.LocalDateTime;
 @Route("add")
 public class AddMeasurementsView extends VerticalLayout {
 
-    @Autowired
-    private SugarRepository sugarRepository;
-    @Autowired
-    private InsulinRepository insulinRepository;
+    private final SugarService sugarService;
+    private final InsulinService insulinService;
 
     private final ComboBox<MeasurementType> comboBoxMeasurementType;
     private final NumberField numFieldSugar;
@@ -37,9 +35,11 @@ public class AddMeasurementsView extends VerticalLayout {
     private final NumberField numFieldInsulin;
     private final ComboBox<InsulinType> comboBoxInsulinType;
     private final Button buttonCommitInsulin;
-    private final TopMenuBar topMenuBar = new TopMenuBar();
 
-    public AddMeasurementsView() {
+    public AddMeasurementsView(SugarService sugarService, InsulinService insulinService) {
+        this.sugarService = sugarService;
+        this.insulinService = insulinService;
+        
         comboBoxMeasurementType = new ComboBox("What do you want to add?");
         comboBoxMeasurementType.setItems(MeasurementType.values());
 
@@ -80,20 +80,25 @@ public class AddMeasurementsView extends VerticalLayout {
         });
 
         setAlignItems(Alignment.CENTER);
-        add(topMenuBar.getBarLayout(), comboBoxMeasurementType);
+        add(new TopMenuBar(), comboBoxMeasurementType);
 
 
     }
 
     private void saveSugar() {
         Sugar sugar = new Sugar(numFieldSugar.getValue(), comboBoxSugarType.getValue(), comboBoxSugarUnitsType.getValue(), dateTimePicker.getValue());
-        sugarRepository.save(sugar);
-        UI.getCurrent().getPage().reload();
+        sugarService.save(sugar);
+        remove(numFieldSugar, comboBoxSugarUnitsType, comboBoxSugarType, dateTimePicker, buttonCommitSugar);
+        comboBoxMeasurementType.setValue(null);
+        Notification.show("Saved").setPosition(Notification.Position.MIDDLE);
     }
 
+    //TODO set to nulls fields
     private void saveInsulin() {
         Insulin insulin = new Insulin(numFieldInsulin.getValue().intValue(), comboBoxInsulinType.getValue(), dateTimePicker.getValue());
-        insulinRepository.save(insulin);
-        UI.getCurrent().getPage().reload();
+        insulinService.save(insulin);
+        remove(numFieldInsulin, comboBoxInsulinType, dateTimePicker, buttonCommitInsulin);
+        comboBoxMeasurementType.setValue(null);
+        Notification.show("Saved").setPosition(Notification.Position.MIDDLE);
     }
 }

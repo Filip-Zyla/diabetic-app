@@ -1,6 +1,6 @@
-package com.filipzyla.diabeticapp.insulin;
+package com.filipzyla.diabeticapp.backend.models;
 
-import com.filipzyla.diabeticapp.enums.InsulinType;
+import com.filipzyla.diabeticapp.backend.enums.InsulinType;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;

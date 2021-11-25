@@ -1,7 +1,7 @@
-package com.filipzyla.diabeticapp.suger;
+package com.filipzyla.diabeticapp.backend.models;
 
-import com.filipzyla.diabeticapp.enums.SugarType;
-import com.filipzyla.diabeticapp.enums.SugarUnits;
+import com.filipzyla.diabeticapp.backend.enums.SugarType;
+import com.filipzyla.diabeticapp.backend.enums.SugarUnits;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -16,7 +16,7 @@ import java.time.LocalDateTime;
 @Setter
 @Entity()
 @Table(uniqueConstraints = {
-        @UniqueConstraint(name = "sugar_unique", columnNames = "id")
+        @UniqueConstraint(name = "sugar_unique", columnNames = {"id"})
 })
 public class Sugar {
 

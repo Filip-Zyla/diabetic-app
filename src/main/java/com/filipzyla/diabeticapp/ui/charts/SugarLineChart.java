@@ -1,7 +1,7 @@
-package com.filipzyla.diabeticapp.charts;
+package com.filipzyla.diabeticapp.ui.charts;
 
-import com.filipzyla.diabeticapp.suger.Sugar;
-import com.filipzyla.diabeticapp.suger.SugarRepository;
+import com.filipzyla.diabeticapp.backend.models.Sugar;
+import com.filipzyla.diabeticapp.backend.repositories.SugarRepository;
 import com.github.appreciated.apexcharts.ApexCharts;
 import com.github.appreciated.apexcharts.ApexChartsBuilder;
 import com.github.appreciated.apexcharts.config.builder.*;
@@ -12,13 +12,12 @@ import com.github.appreciated.apexcharts.config.stroke.Curve;
 import com.github.appreciated.apexcharts.config.xaxis.XAxisType;
 import com.github.appreciated.apexcharts.helper.Series;
 import com.vaadin.flow.component.html.Div;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import java.time.LocalDate;
 import java.util.List;
 
 public class SugarLineChart extends Div {
-    @Autowired
+
     private SugarRepository sugarRepository;
 
     public SugarLineChart(SugarRepository sugarRepository) {

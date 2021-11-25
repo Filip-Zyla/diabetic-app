@@ -1,4 +1,4 @@
-package com.filipzyla.diabeticapp;
+package com.filipzyla.diabeticapp.backend.utility;
 
 import java.time.format.DateTimeFormatter;
 

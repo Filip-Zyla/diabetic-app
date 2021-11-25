@@ -1,4 +1,4 @@
-package com.filipzyla.diabeticapp.enums;
+package com.filipzyla.diabeticapp.backend.enums;
 
 public enum SugarType {
     BEFORE_MEAL("Before meal"),
@@ -7,8 +7,8 @@ public enum SugarType {
 
     private String msg;
 
-    SugarType(String s){
-        msg=s;
+    SugarType(String s) {
+        msg = s;
     }
 
     public String getMsg() {
