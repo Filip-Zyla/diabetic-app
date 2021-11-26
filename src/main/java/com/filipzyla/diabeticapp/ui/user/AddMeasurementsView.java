@@ -19,6 +19,7 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.NumberField;
 import com.vaadin.flow.component.textfield.TextArea;
+import com.vaadin.flow.data.value.ValueChangeMode;
 import com.vaadin.flow.router.Route;
 
 import java.time.Duration;
@@ -67,8 +68,12 @@ public class AddMeasurementsView extends VerticalLayout {
         dateTimePicker.setValue(LocalDateTime.now());
         dateTimePicker.setStep(Duration.ofMinutes(1));
         TextArea textAreaNote = new TextArea("Note");
-        textAreaNote.setWidth(300, Unit.PIXELS);
-        textAreaNote.setMaxLength(200);
+        textAreaNote.setWidth(400, Unit.PIXELS);
+        textAreaNote.setMaxLength(255);
+        textAreaNote.setValueChangeMode(ValueChangeMode.EAGER);
+        textAreaNote.addValueChangeListener(e -> {
+            e.getSource().setHelperText(e.getValue().length() + "/" + 255);
+        });
 
         Button buttonSave = new Button("Save", save -> {
             Sugar sugar = new Sugar(numField.getValue(), comboBoxType.getValue(), comboBoxUnits.getValue(), dateTimePicker.getValue(), textAreaNote.getValue());
@@ -100,8 +105,12 @@ public class AddMeasurementsView extends VerticalLayout {
         dateTimePicker.setValue(LocalDateTime.now());
         dateTimePicker.setStep(Duration.ofMinutes(1));
         TextArea textAreaNote = new TextArea("Note");
-        textAreaNote.setWidth(300, Unit.PIXELS);
-        textAreaNote.setMaxLength(200);
+        textAreaNote.setWidth(400, Unit.PIXELS);
+        textAreaNote.setMaxLength(255);
+        textAreaNote.setValueChangeMode(ValueChangeMode.EAGER);
+        textAreaNote.addValueChangeListener(e -> {
+            e.getSource().setHelperText(e.getValue().length() + "/" + 255);
+        });
 
         Button buttonSave = new Button("Save", save -> {
             Insulin insulin = new Insulin(numField.getValue().intValue(), comboBoxType.getValue(), dateTimePicker.getValue(), textAreaNote.getValue());

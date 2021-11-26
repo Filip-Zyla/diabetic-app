@@ -25,7 +25,7 @@ public class Sugar {
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "sugar_id_sequence")
     private Long id;
 
-    @Column(nullable = false)
+    @Column(nullable = false, scale = 1)
     private Double sugar;
 
     @Enumerated(EnumType.ORDINAL)

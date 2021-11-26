@@ -1,23 +1,22 @@
 !!! Functionality !!!
 - users
+    - one table for passwords etc., second for sugar boundaries or default units
     - create with: userName, password, id, email
     - update: userName, password
     - delete
     - logging, retrieve password
     - user settings
     - add user id to sugar and insulin
-- precision and length of columns
 - default units of sugar adn boundaries
 - security
     - ssl
     - spring security
     - user token?
 - caching
-- scheduled reports, graphs, charts, show sugar boundaries
+- scheduled reports,
 - different languages
 
 !!! UI !!!
+- styling
 - login page: logging, retrieve password
-- general bar/menu bar with setting, main page redirect, logout, or tabs???
-- main user page: last action/sugar and insulin? showed
-    - adding new action same or other page?
+- graphs, charts, show sugar boundaries
