@@ -5,18 +5,15 @@
     - delete
     - logging, retrieve password
     - user settings
-- sugarLevel
-    - add note, userId
-- insulin
-    - add note, userId
-- default units of sugar
-- service layer !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    - add user id to sugar and insulin
+- precision and length of columns
+- default units of sugar adn boundaries
 - security
     - ssl
     - spring security
     - user token?
 - caching
-- scheduled reports, graphs, charts, set sugar boundaries
+- scheduled reports, graphs, charts, show sugar boundaries
 - different languages
 
 !!! UI !!!

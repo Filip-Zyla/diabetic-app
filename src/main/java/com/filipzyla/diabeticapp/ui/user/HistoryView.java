@@ -24,6 +24,7 @@ import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.NumberField;
+import com.vaadin.flow.component.textfield.TextArea;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
 import com.vaadin.flow.router.Route;
 
@@ -123,20 +124,25 @@ public class HistoryView extends VerticalLayout {
         comboBoxType.setItemLabelGenerator(SugarType::getMsg);
         DateTimePicker dateTimePicker = new DateTimePicker("Time");
         dateTimePicker.setStep(Duration.ofMinutes(1));
+        TextArea textAreaNote = new TextArea("Note");
+        textAreaNote.setWidth(300, Unit.PIXELS);
+        textAreaNote.setMaxLength(200);
 
         numField.setValue(sugar.getSugar());
         comboBoxUnits.setValue(sugar.getUnits());
         comboBoxType.setValue(sugar.getType());
         dateTimePicker.setValue(sugar.getTime());
+        textAreaNote.setValue(sugar.getNote());
 
         VerticalLayout dialogLayout = new VerticalLayout();
-        dialogLayout.add(numField, comboBoxUnits, comboBoxType, dateTimePicker);
+        dialogLayout.add(numField, comboBoxUnits, comboBoxType, dateTimePicker, textAreaNote);
 
         Button buttonCommit = new Button("Save", save -> {
             sugar.setSugar(numField.getValue());
             sugar.setUnits(comboBoxUnits.getValue());
             sugar.setType(comboBoxType.getValue());
             sugar.setTime(dateTimePicker.getValue());
+            sugar.setNote(textAreaNote.getValue());
             sugarService.save(sugar);
             dialog.close();
             refreshHistoryGrid();
@@ -167,18 +173,23 @@ public class HistoryView extends VerticalLayout {
         comboBox.setItemLabelGenerator(InsulinType::getMsg);
         DateTimePicker dateTimePicker = new DateTimePicker("Time");
         dateTimePicker.setStep(Duration.ofMinutes(1));
+        TextArea textAreaNote = new TextArea("Note");
+        textAreaNote.setWidth(300, Unit.PIXELS);
+        textAreaNote.setMaxLength(200);
 
         numField.setValue(Double.valueOf(insulin.getInsulin()));
         comboBox.setValue(insulin.getType());
         dateTimePicker.setValue(insulin.getTime());
+        textAreaNote.setValue(insulin.getNote());
 
         VerticalLayout dialogLayout = new VerticalLayout();
-        dialogLayout.add(numField, comboBox, dateTimePicker);
+        dialogLayout.add(numField, comboBox, dateTimePicker, textAreaNote);
 
         Button buttonCommit = new Button("Save", save -> {
             insulin.setInsulin(numField.getValue().intValue());
             insulin.setType(comboBox.getValue());
             insulin.setTime(dateTimePicker.getValue());
+            insulin.setNote(textAreaNote.getValue());
             insulinService.save(insulin);
             dialog.close();
             refreshHistoryGrid();

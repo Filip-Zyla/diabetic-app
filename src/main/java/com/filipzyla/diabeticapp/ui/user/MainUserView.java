@@ -11,6 +11,7 @@ import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.html.H3;
 import com.vaadin.flow.component.html.H5;
+import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
@@ -50,7 +51,8 @@ public class MainUserView extends VerticalLayout {
             H5 labelSugar = new H5(sugarOpt.get().getSugar().toString() + " " + sugarOpt.get().getUnits().getMsg());
             H5 labelTypeSug = new H5(sugarOpt.get().getType().getMsg());
             H5 labelTimeSug = new H5(sugarOpt.get().getTime().format(CustomDateTimeFormatter.formatter));
-            layoutLastSugar.add(labelSugarMain, labelSugar, labelTypeSug, labelTimeSug);
+            Label labelNote = new Label(sugarOpt.get().getNote());
+            layoutLastSugar.add(labelSugarMain, labelSugar, labelTypeSug, labelTimeSug, labelNote);
         }
         return layoutLastSugar;
     }
@@ -66,7 +68,8 @@ public class MainUserView extends VerticalLayout {
             H5 labelInsulin = new H5(insulinOpt.get().getInsulin().toString() + " units");
             H5 labelTypeIns = new H5(insulinOpt.get().getType().getMsg());
             H5 labelTimeIns = new H5(insulinOpt.get().getTime().format(CustomDateTimeFormatter.formatter));
-            layoutLastInsulin.add(labelInsulinMain, labelInsulin, labelTypeIns, labelTimeIns);
+            Label labelNote = new Label(insulinOpt.get().getNote());
+            layoutLastInsulin.add(labelInsulinMain, labelInsulin, labelTypeIns, labelTimeIns, labelNote);
         }
         return layoutLastInsulin;
     }

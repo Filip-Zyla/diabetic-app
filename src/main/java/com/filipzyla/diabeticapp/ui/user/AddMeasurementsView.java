@@ -10,12 +10,15 @@ import com.filipzyla.diabeticapp.backend.service.InsulinService;
 import com.filipzyla.diabeticapp.backend.service.SugarService;
 import com.filipzyla.diabeticapp.ui.components.TopMenuBar;
 import com.vaadin.flow.component.Component;
+import com.vaadin.flow.component.Unit;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.datetimepicker.DateTimePicker;
 import com.vaadin.flow.component.notification.Notification;
+import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.NumberField;
+import com.vaadin.flow.component.textfield.TextArea;
 import com.vaadin.flow.router.Route;
 
 import java.time.Duration;
@@ -56,25 +59,34 @@ public class AddMeasurementsView extends VerticalLayout {
         ComboBox<SugarUnits> comboBoxUnits = new ComboBox("Units");
         comboBoxUnits.setItems(SugarUnits.values());
         comboBoxUnits.setItemLabelGenerator(SugarUnits::getMsg);
+        comboBoxUnits.setWidth(110, Unit.PIXELS);
         ComboBox<SugarType> comboBoxType = new ComboBox("Type");
         comboBoxType.setItems(SugarType.values());
         comboBoxType.setItemLabelGenerator(SugarType::getMsg);
         DateTimePicker dateTimePicker = new DateTimePicker("Time");
         dateTimePicker.setValue(LocalDateTime.now());
         dateTimePicker.setStep(Duration.ofMinutes(1));
+        TextArea textAreaNote = new TextArea("Note");
+        textAreaNote.setWidth(300, Unit.PIXELS);
+        textAreaNote.setMaxLength(200);
 
         Button buttonSave = new Button("Save", save -> {
-            Sugar sugar = new Sugar(numField.getValue(), comboBoxType.getValue(), comboBoxUnits.getValue(), dateTimePicker.getValue());
+            Sugar sugar = new Sugar(numField.getValue(), comboBoxType.getValue(), comboBoxUnits.getValue(), dateTimePicker.getValue(), textAreaNote.getValue());
             sugarService.save(sugar);
             Notification.show("Saved").setPosition(Notification.Position.MIDDLE);
             numField.setValue(null);
             comboBoxType.setValue(null);
             comboBoxUnits.setValue(null);
             dateTimePicker.setValue(LocalDateTime.now());
+            textAreaNote.setValue("");
         });
 
+        HorizontalLayout sugarWithUnitsLayout = new HorizontalLayout();
+        sugarWithUnitsLayout.add(numField, comboBoxUnits);
+        sugarWithUnitsLayout.setAlignItems(Alignment.CENTER);
+
         sugarLayout.setAlignItems(Alignment.CENTER);
-        sugarLayout.add(numField, comboBoxUnits, comboBoxType, dateTimePicker, buttonSave);
+        sugarLayout.add(sugarWithUnitsLayout, comboBoxType, dateTimePicker, textAreaNote, buttonSave);
         return sugarLayout;
     }
 
@@ -87,18 +99,22 @@ public class AddMeasurementsView extends VerticalLayout {
         DateTimePicker dateTimePicker = new DateTimePicker("Time");
         dateTimePicker.setValue(LocalDateTime.now());
         dateTimePicker.setStep(Duration.ofMinutes(1));
+        TextArea textAreaNote = new TextArea("Note");
+        textAreaNote.setWidth(300, Unit.PIXELS);
+        textAreaNote.setMaxLength(200);
 
         Button buttonSave = new Button("Save", save -> {
-            Insulin insulin = new Insulin(numField.getValue().intValue(), comboBoxType.getValue(), dateTimePicker.getValue());
+            Insulin insulin = new Insulin(numField.getValue().intValue(), comboBoxType.getValue(), dateTimePicker.getValue(), textAreaNote.getValue());
             insulinService.save(insulin);
             Notification.show("Saved").setPosition(Notification.Position.MIDDLE);
             numField.setValue(null);
             comboBoxType.setValue(null);
             dateTimePicker.setValue(LocalDateTime.now());
+            textAreaNote.setValue("");
         });
 
         insulinLayout.setAlignItems(Alignment.CENTER);
-        insulinLayout.add(numField, comboBoxType, dateTimePicker, buttonSave);
+        insulinLayout.add(numField, comboBoxType, dateTimePicker, textAreaNote, buttonSave);
         return insulinLayout;
     }
 }

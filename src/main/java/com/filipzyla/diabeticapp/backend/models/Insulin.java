@@ -31,13 +31,15 @@ public class Insulin {
     @Column(nullable = false)
     private InsulinType type;
 
-
     @Column(nullable = false)
     private LocalDateTime time;
 
-    public Insulin(Integer insulin, InsulinType type, LocalDateTime time) {
+    private String note;
+
+    public Insulin(Integer insulin, InsulinType type, LocalDateTime time, String note) {
         this.insulin = insulin;
         this.type = type;
         this.time = time;
+        this.note = note;
     }
 }

@@ -39,10 +39,13 @@ public class Sugar {
     @Column(nullable = false)
     private LocalDateTime time;
 
-    public Sugar(Double sugar, SugarType type, SugarUnits units, LocalDateTime time) {
+    private String note;
+
+    public Sugar(Double sugar, SugarType type, SugarUnits units, LocalDateTime time, String note) {
         this.sugar = sugar;
         this.type = type;
         this.units = units;
         this.time = time;
+        this.note = note;
     }
 }
