@@ -11,9 +11,6 @@ import java.util.stream.Stream;
 
 public class SecurityUtils {
 
-    private SecurityUtils() {
-    }
-
     static boolean isFrameworkInternalRequest(HttpServletRequest request) {
         final String parameterValue = request.getParameter(ApplicationConstants.REQUEST_TYPE_PARAMETER);
         return parameterValue != null

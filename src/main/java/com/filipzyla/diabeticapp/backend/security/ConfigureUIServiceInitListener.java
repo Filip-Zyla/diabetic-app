@@ -1,6 +1,7 @@
 package com.filipzyla.diabeticapp.backend.security;
 
-import com.filipzyla.diabeticapp.ui.LoginView;
+import com.filipzyla.diabeticapp.ui.login.LoginView;
+import com.filipzyla.diabeticapp.ui.login.RegisterView;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.router.BeforeEnterEvent;
 import com.vaadin.flow.server.ServiceInitEvent;
@@ -19,7 +20,10 @@ public class ConfigureUIServiceInitListener implements VaadinServiceInitListener
     }
 
     private void beforeEnter(BeforeEnterEvent event) {
-        if (!LoginView.class.equals(event.getNavigationTarget())
+        if (RegisterView.class.equals(event.getNavigationTarget()) && !SecurityUtils.isUserLoggedIn()) {
+            event.rerouteTo(RegisterView.class);
+        }
+        else if (!LoginView.class.equals(event.getNavigationTarget())
                 && !SecurityUtils.isUserLoggedIn()) {
             event.rerouteTo(LoginView.class);
         }

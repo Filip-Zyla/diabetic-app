@@ -1,10 +1,9 @@
 !!! Functionality !!!
 - users
     - one table for passwords etc., second for sugar boundaries or default units
-    - create with: userName, password, id, email
-    - update: userName, password
+    - update: userName, password, email
     - delete
-    - logging, retrieve password
+    - logging, retrieve password, register, emails/confirm by email
     - user settings
     - add user id to sugar and insulin
 - admin functionality
@@ -18,6 +17,7 @@
 - different languages
 
 !!! UI !!!
+- history sugar with colors if > or <
 - styling
 - login page: logging, retrieve password
 - graphs, charts, show sugar boundaries

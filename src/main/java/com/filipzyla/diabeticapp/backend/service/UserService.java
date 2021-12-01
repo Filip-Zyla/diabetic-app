@@ -14,4 +14,17 @@ public class UserService {
     public User findByUsername(String username) {
         return userRepository.findByUsername(username);
     }
+
+    public boolean validateEmail(String email) {
+        return userRepository.existsByEmail(email);
+    }
+
+    public boolean validateUsername(String username) {
+        return userRepository.existsByUsername(username);
+    }
+
+    public void registerUser(String email, String username, String pass) {
+        User user = new User(username, pass, email);
+        userRepository.save(user);
+    }
 }
