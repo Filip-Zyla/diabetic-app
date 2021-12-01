@@ -7,6 +7,7 @@
     - logging, retrieve password
     - user settings
     - add user id to sugar and insulin
+- admin functionality
 - default units of sugar adn boundaries
 - security
     - ssl

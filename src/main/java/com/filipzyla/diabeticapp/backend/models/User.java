@@ -1,10 +1,14 @@
 package com.filipzyla.diabeticapp.backend.models;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 
+import javax.persistence.*;
+
+@ToString
+@Getter
+@Setter
 @Entity
 public class User {
 
@@ -20,4 +24,8 @@ public class User {
 
     @Column(nullable = false, length = 50)
     private String email;
+
+    @OneToOne(cascade = CascadeType.ALL, optional = false)
+    private UserSettings settings;
+
 }

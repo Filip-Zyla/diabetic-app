@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
 @ToString
 @Getter
 @Setter
-@Entity()
+@Entity
 @Table(uniqueConstraints = {
         @UniqueConstraint(name = "sugar_unique", columnNames = {"id"})
 })
