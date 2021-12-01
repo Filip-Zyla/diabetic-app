@@ -6,6 +6,7 @@ import com.filipzyla.diabeticapp.backend.enums.SugarType;
 import com.filipzyla.diabeticapp.backend.enums.SugarUnits;
 import com.filipzyla.diabeticapp.backend.models.Insulin;
 import com.filipzyla.diabeticapp.backend.models.Sugar;
+import com.filipzyla.diabeticapp.backend.security.SecurityService;
 import com.filipzyla.diabeticapp.backend.service.InsulinService;
 import com.filipzyla.diabeticapp.backend.service.SugarService;
 import com.filipzyla.diabeticapp.ui.components.TopMenuBar;
@@ -28,12 +29,15 @@ import java.time.LocalDateTime;
 @Route("add")
 public class AddMeasurementsView extends VerticalLayout {
 
+    private final SecurityService securityService;
     private final SugarService sugarService;
     private final InsulinService insulinService;
+
     private final VerticalLayout insulinLayout = new VerticalLayout();
     private final VerticalLayout sugarLayout = new VerticalLayout();
 
-    public AddMeasurementsView(SugarService sugarService, InsulinService insulinService) {
+    public AddMeasurementsView(SugarService sugarService, InsulinService insulinService, SecurityService securityService) {
+        this.securityService = securityService;
         this.sugarService = sugarService;
         this.insulinService = insulinService;
 
@@ -51,7 +55,7 @@ public class AddMeasurementsView extends VerticalLayout {
         });
 
         setAlignItems(Alignment.CENTER);
-        add(new TopMenuBar(), comboBoxMeasurementType);
+        add(new TopMenuBar(securityService), comboBoxMeasurementType);
     }
 
     private Component addSugarLayout() {

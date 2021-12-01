@@ -5,6 +5,7 @@ import com.filipzyla.diabeticapp.backend.enums.SugarType;
 import com.filipzyla.diabeticapp.backend.enums.SugarUnits;
 import com.filipzyla.diabeticapp.backend.models.Insulin;
 import com.filipzyla.diabeticapp.backend.models.Sugar;
+import com.filipzyla.diabeticapp.backend.security.SecurityService;
 import com.filipzyla.diabeticapp.backend.service.InsulinService;
 import com.filipzyla.diabeticapp.backend.service.SugarService;
 import com.filipzyla.diabeticapp.backend.utility.CustomDateTimeFormatter;
@@ -36,6 +37,7 @@ import java.util.Optional;
 @Route("history")
 public class HistoryView extends VerticalLayout {
 
+    private final SecurityService securityService;
     private final SugarService sugarService;
     private final InsulinService insulinService;
 
@@ -43,14 +45,15 @@ public class HistoryView extends VerticalLayout {
     private final VerticalLayout layoutInsulin = new VerticalLayout();
     private DatePicker datePickerFrom, datePickerTo;
 
-    public HistoryView(SugarService sugarService, InsulinService insulinService) {
+    public HistoryView(SugarService sugarService, InsulinService insulinService, SecurityService securityService) {
+        this.securityService = securityService;
         this.sugarService = sugarService;
         this.insulinService = insulinService;
 
         Button buttonShowHistory = new Button("Show", event -> refreshHistoryGrid());
         setAlignItems(Alignment.CENTER);
 
-        add(new TopMenuBar(), new H2("History"), datePeriodSelector(), buttonShowHistory, historyGrid());
+        add(new TopMenuBar(securityService), new H2("History"), datePeriodSelector(), buttonShowHistory, historyGrid());
     }
 
     private Component datePeriodSelector() {
