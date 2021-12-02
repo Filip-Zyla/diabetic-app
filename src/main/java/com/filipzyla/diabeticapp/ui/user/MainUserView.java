@@ -2,6 +2,7 @@ package com.filipzyla.diabeticapp.ui.user;
 
 import com.filipzyla.diabeticapp.backend.models.Insulin;
 import com.filipzyla.diabeticapp.backend.models.Sugar;
+import com.filipzyla.diabeticapp.backend.security.SecurityService;
 import com.filipzyla.diabeticapp.backend.service.InsulinService;
 import com.filipzyla.diabeticapp.backend.service.SugarService;
 import com.filipzyla.diabeticapp.backend.utility.CustomDateTimeFormatter;
@@ -23,14 +24,16 @@ import java.util.Optional;
 @Route("home")
 public class MainUserView extends VerticalLayout {
 
+    private final SecurityService securityService;
     private final SugarService sugarService;
     private final InsulinService insulinService;
 
-    public MainUserView(SugarService sugarService, InsulinService insulinService) {
+    public MainUserView(SugarService sugarService, InsulinService insulinService, SecurityService securityService) {
+        this.securityService = securityService;
         this.sugarService = sugarService;
         this.insulinService = insulinService;
 
-        add(new TopMenuBar(), addLastMeasurements(), lowerButtons());
+        add(new TopMenuBar(securityService), addLastMeasurements(), lowerButtons());
     }
 
     private Component addLastMeasurements() {

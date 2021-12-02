@@ -1,5 +1,6 @@
 package com.filipzyla.diabeticapp.ui.components;
 
+import com.filipzyla.diabeticapp.backend.security.SecurityService;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.Unit;
 import com.vaadin.flow.component.button.Button;
@@ -10,10 +11,14 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 
 public class TopMenuBar extends HorizontalLayout {
 
-    public TopMenuBar() {
+    private final SecurityService securityService;
+
+    public TopMenuBar(SecurityService securityService) {
+        this.securityService = securityService;
+
         Button buttonHomePage = new Button("Home", new Icon(VaadinIcon.HOME), event -> UI.getCurrent().navigate("home"));
         Button buttonSetting = new Button("Settings", new Icon(VaadinIcon.OPTIONS), event -> UI.getCurrent().navigate(""));
-        Button buttonLogout = new Button("Logout", new Icon(VaadinIcon.EXIT), event -> UI.getCurrent().navigate(""));
+        Button buttonLogout = new Button("Logout", new Icon(VaadinIcon.EXIT), event -> securityService.logout());
 
         setHeight(50, Unit.PIXELS);
         setWidthFull();

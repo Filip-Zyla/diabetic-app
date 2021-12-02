@@ -1,22 +1,28 @@
 !!! Functionality !!!
 - users
-    - one table for passwords etc., second for sugar boundaries or default units
-    - create with: userName, password, id, email
-    - update: userName, password
+    - one table for passwords etc.,
+    - second for sugar boundaries or default units
+    - update: userName, password, email
     - delete
-    - logging, retrieve password
-    - user settings
+    - logging, retrieve password, register, emails/confirm by email
+    - user settings init during registration
     - add user id to sugar and insulin
+- admin functionality
 - default units of sugar adn boundaries
 - security
+    - password encryption
     - ssl
     - spring security
     - user token?
+- admin and user roles
 - caching
 - scheduled reports,
 - different languages
 
 !!! UI !!!
+- history sugar with colors if > or <
 - styling
-- login page: logging, retrieve password
+- login page, retrieve password, register
+- settings
 - graphs, charts, show sugar boundaries
+- admin views

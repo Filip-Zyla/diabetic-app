@@ -2,10 +2,11 @@ package com.filipzyla.diabeticapp;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.web.servlet.error.ErrorMvcAutoConfiguration;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
-@SpringBootApplication
 @EnableJpaRepositories
+@SpringBootApplication(exclude = ErrorMvcAutoConfiguration.class)
 public class DiabeticAppApplication {
 
     public static void main(String[] args) {

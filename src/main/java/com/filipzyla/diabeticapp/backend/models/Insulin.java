@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 @ToString
 @Getter
 @Setter
-@Entity()
+@Entity
 @Table(uniqueConstraints = {
         @UniqueConstraint(name = "insulin_unique", columnNames = "id")
 })
@@ -33,7 +33,7 @@ public class Insulin {
 
     @Column(nullable = false)
     private LocalDateTime time;
-    
+
     private String note;
 
     public Insulin(Integer insulin, InsulinType type, LocalDateTime time, String note) {
