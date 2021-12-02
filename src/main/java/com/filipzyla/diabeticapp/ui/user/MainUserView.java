@@ -1,10 +1,12 @@
 package com.filipzyla.diabeticapp.ui.user;
 
+import com.filipzyla.diabeticapp.backend.enums.SugarUnits;
 import com.filipzyla.diabeticapp.backend.models.Insulin;
 import com.filipzyla.diabeticapp.backend.models.Sugar;
 import com.filipzyla.diabeticapp.backend.security.SecurityService;
 import com.filipzyla.diabeticapp.backend.service.InsulinService;
 import com.filipzyla.diabeticapp.backend.service.SugarService;
+import com.filipzyla.diabeticapp.backend.service.UserService;
 import com.filipzyla.diabeticapp.backend.utility.CustomDateTimeFormatter;
 import com.filipzyla.diabeticapp.ui.components.TopMenuBar;
 import com.vaadin.flow.component.Component;
@@ -19,6 +21,7 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.Route;
 
+import java.text.DecimalFormat;
 import java.util.Optional;
 
 @Route("home")
@@ -27,11 +30,13 @@ public class MainUserView extends VerticalLayout {
     private final SecurityService securityService;
     private final SugarService sugarService;
     private final InsulinService insulinService;
+    private final UserService userService;
 
-    public MainUserView(SugarService sugarService, InsulinService insulinService, SecurityService securityService) {
+    public MainUserView(SugarService sugarService, InsulinService insulinService, SecurityService securityService, UserService userService) {
         this.securityService = securityService;
         this.sugarService = sugarService;
         this.insulinService = insulinService;
+        this.userService = userService;
 
         add(new TopMenuBar(securityService), addLastMeasurements(), lowerButtons());
     }
@@ -50,9 +55,21 @@ public class MainUserView extends VerticalLayout {
 
         Optional<Sugar> sugarOpt = Optional.ofNullable(sugarService.findFirstByOrderByTimeAsc());
         if (sugarOpt.isPresent()) {
+            SugarUnits userUnits = userService.findByUsername(securityService.getAuthenticatedUser()).getUnits();
+            DecimalFormat f = new DecimalFormat("0.#");
+
             H3 labelSugarMain = new H3("Last sugar");
-            H5 labelSugar = new H5(sugarOpt.get().getSugar().toString() + " " + sugarOpt.get().getUnits().getMsg());
-            H5 labelTypeSug = new H5(sugarOpt.get().getType().getMsg());
+            H5 labelSugar;
+            H5 labelTypeSug;
+            if (sugarOpt.get().getUnits() != userUnits) {
+                Double s = sugarOpt.get().getSugar() * sugarOpt.get().getUnits().getConversion();
+                labelSugar = new H5(f.format(s) + " " + userUnits.getMsg());
+                labelTypeSug = new H5(sugarOpt.get().getType().getMsg());
+            }
+            else {
+                labelSugar = new H5(f.format(sugarOpt.get().getSugar()) + " " + sugarOpt.get().getUnits().getMsg());
+                labelTypeSug = new H5(sugarOpt.get().getType().getMsg());
+            }
             H5 labelTimeSug = new H5(sugarOpt.get().getTime().format(CustomDateTimeFormatter.formatter));
             Label labelNote = new Label(sugarOpt.get().getNote());
             layoutLastSugar.add(labelSugarMain, labelSugar, labelTypeSug, labelTimeSug, labelNote);

@@ -1,7 +1,5 @@
 !!! Functionality !!!
 - users
-    - one table for passwords etc.,
-    - second for sugar boundaries or default units
     - update: userName, password, email
     - delete
     - logging, retrieve password, register, emails/confirm by email
@@ -18,6 +16,8 @@
 - caching
 - scheduled reports,
 - different languages
+- email all
+- validatrion and boundareis of all inputs, boudaries for given sugar unit
 
 !!! UI !!!
 - history sugar with colors if > or <

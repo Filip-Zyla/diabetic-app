@@ -11,13 +11,9 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 
 public class TopMenuBar extends HorizontalLayout {
 
-    private final SecurityService securityService;
-
     public TopMenuBar(SecurityService securityService) {
-        this.securityService = securityService;
-
         Button buttonHomePage = new Button("Home", new Icon(VaadinIcon.HOME), event -> UI.getCurrent().navigate("home"));
-        Button buttonSetting = new Button("Settings", new Icon(VaadinIcon.OPTIONS), event -> UI.getCurrent().navigate(""));
+        Button buttonSetting = new Button("Settings", new Icon(VaadinIcon.OPTIONS), event -> UI.getCurrent().navigate("settings"));
         Button buttonLogout = new Button("Logout", new Icon(VaadinIcon.EXIT), event -> securityService.logout());
 
         setHeight(50, Unit.PIXELS);

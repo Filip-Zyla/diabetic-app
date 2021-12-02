@@ -14,6 +14,14 @@ public class UserService {
 
     private final UserRepository userRepository;
 
+    public User saveUser(User user) {
+        return userRepository.save(user);
+    }
+
+    public User findByUsername(String username) {
+        return userRepository.findByUsername(username);
+    }
+
     public Optional<User> findByCredentials(String username, String password) {
         final Optional<User> userOptional = userRepository.findByUsernameAndPassword(username, password);
         userOptional.orElseThrow(() -> new UsernameNotFoundException("Not found: " + username));

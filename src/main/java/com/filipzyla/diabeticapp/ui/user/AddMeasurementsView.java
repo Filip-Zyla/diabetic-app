@@ -9,6 +9,7 @@ import com.filipzyla.diabeticapp.backend.models.Sugar;
 import com.filipzyla.diabeticapp.backend.security.SecurityService;
 import com.filipzyla.diabeticapp.backend.service.InsulinService;
 import com.filipzyla.diabeticapp.backend.service.SugarService;
+import com.filipzyla.diabeticapp.backend.service.UserService;
 import com.filipzyla.diabeticapp.ui.components.TopMenuBar;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.Unit;
@@ -32,14 +33,16 @@ public class AddMeasurementsView extends VerticalLayout {
     private final SecurityService securityService;
     private final SugarService sugarService;
     private final InsulinService insulinService;
+    private final UserService userService;
 
     private final VerticalLayout insulinLayout = new VerticalLayout();
     private final VerticalLayout sugarLayout = new VerticalLayout();
 
-    public AddMeasurementsView(SugarService sugarService, InsulinService insulinService, SecurityService securityService) {
+    public AddMeasurementsView(SugarService sugarService, InsulinService insulinService, SecurityService securityService, UserService userService) {
         this.securityService = securityService;
         this.sugarService = sugarService;
         this.insulinService = insulinService;
+        this.userService = userService;
 
         ComboBox<MeasurementType> comboBoxMeasurementType = new ComboBox("What do you want to add?");
         comboBoxMeasurementType.setItems(MeasurementType.values());
@@ -59,12 +62,15 @@ public class AddMeasurementsView extends VerticalLayout {
     }
 
     private Component addSugarLayout() {
+        SugarUnits userUnits = userService.findByUsername(securityService.getAuthenticatedUser()).getUnits();
+
         NumberField numField = new NumberField("Sugar");
         numField.setStep(0.1);
         ComboBox<SugarUnits> comboBoxUnits = new ComboBox("Units");
         comboBoxUnits.setItems(SugarUnits.values());
         comboBoxUnits.setItemLabelGenerator(SugarUnits::getMsg);
         comboBoxUnits.setWidth(110, Unit.PIXELS);
+        comboBoxUnits.setValue(userUnits);
         ComboBox<SugarType> comboBoxType = new ComboBox("Type");
         comboBoxType.setItems(SugarType.values());
         comboBoxType.setItemLabelGenerator(SugarType::getMsg);

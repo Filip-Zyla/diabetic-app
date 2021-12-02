@@ -5,9 +5,11 @@ import com.filipzyla.diabeticapp.backend.enums.SugarType;
 import com.filipzyla.diabeticapp.backend.enums.SugarUnits;
 import com.filipzyla.diabeticapp.backend.models.Insulin;
 import com.filipzyla.diabeticapp.backend.models.Sugar;
+import com.filipzyla.diabeticapp.backend.models.User;
 import com.filipzyla.diabeticapp.backend.security.SecurityService;
 import com.filipzyla.diabeticapp.backend.service.InsulinService;
 import com.filipzyla.diabeticapp.backend.service.SugarService;
+import com.filipzyla.diabeticapp.backend.service.UserService;
 import com.filipzyla.diabeticapp.backend.utility.CustomDateTimeFormatter;
 import com.filipzyla.diabeticapp.ui.components.TopMenuBar;
 import com.vaadin.flow.component.Component;
@@ -29,6 +31,7 @@ import com.vaadin.flow.component.textfield.TextArea;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
 import com.vaadin.flow.router.Route;
 
+import java.text.DecimalFormat;
 import java.time.Duration;
 import java.time.LocalDate;
 import java.util.List;
@@ -40,15 +43,17 @@ public class HistoryView extends VerticalLayout {
     private final SecurityService securityService;
     private final SugarService sugarService;
     private final InsulinService insulinService;
+    private final UserService userService;
 
     private final VerticalLayout layoutSugar = new VerticalLayout();
     private final VerticalLayout layoutInsulin = new VerticalLayout();
     private DatePicker datePickerFrom, datePickerTo;
 
-    public HistoryView(SugarService sugarService, InsulinService insulinService, SecurityService securityService) {
+    public HistoryView(SugarService sugarService, InsulinService insulinService, SecurityService securityService, UserService userService) {
         this.securityService = securityService;
         this.sugarService = sugarService;
         this.insulinService = insulinService;
+        this.userService = userService;
 
         Button buttonShowHistory = new Button("Show", event -> refreshHistoryGrid());
         setAlignItems(Alignment.CENTER);
@@ -73,8 +78,10 @@ public class HistoryView extends VerticalLayout {
     }
 
     private Component sugarGrid() {
+        final User user = userService.findByUsername(securityService.getAuthenticatedUser());
+        DecimalFormat f = new DecimalFormat("0.#"); // !!!!!!!!
         Grid<Sugar> gridSugar = new Grid(Sugar.class, false);
-        gridSugar.addColumn(sugar -> sugar.getSugar() + " " + sugar.getUnits().getMsg()).setHeader("Sugar");
+        gridSugar.addColumn(sugar -> f.format(sugar.getSugar()) + " " + sugar.getUnits().getMsg()).setHeader("Sugar");
         gridSugar.addColumn(sugar -> sugar.getType().getMsg()).setHeader("Type");
         gridSugar.addColumn(sugar -> sugar.getTime().format(CustomDateTimeFormatter.formatter)).setHeader("Time");
         gridSugar.addColumn(
@@ -85,6 +92,16 @@ public class HistoryView extends VerticalLayout {
 
 
         Optional<List<Sugar>> sugarOpt = Optional.ofNullable(sugarService.findAllOrderByTimeBetweenDates(datePickerFrom.getValue(), datePickerTo.getValue().plusDays(1)));
+        SugarUnits userUnits = user.getUnits();
+        if (sugarOpt.isPresent()) {
+            for (Sugar s : sugarOpt.get()) {
+                if (s.getUnits() != userUnits) {
+                    Double sug = s.getSugar() * s.getUnits().getConversion();
+                    s.setSugar(sug);
+                    s.setUnits(userUnits);
+                }
+            }
+        }
         sugarOpt.ifPresent(gridSugar::setItems);
         gridSugar.setWidth(700, Unit.PIXELS);
         gridSugar.setHeight(500, Unit.PIXELS);
@@ -118,7 +135,7 @@ public class HistoryView extends VerticalLayout {
         dialog.open();
 
         NumberField numField = new NumberField("Sugar");
-        numField.setStep(1);
+        numField.setStep(0.1);
         ComboBox<SugarUnits> comboBoxUnits = new ComboBox("Units");
         comboBoxUnits.setItems(SugarUnits.values());
         comboBoxUnits.setItemLabelGenerator(SugarUnits::getMsg);
