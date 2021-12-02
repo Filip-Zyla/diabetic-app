@@ -3,7 +3,6 @@ package com.filipzyla.diabeticapp.ui.login;
 import com.filipzyla.diabeticapp.backend.service.UserService;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.Composite;
-import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.html.H2;
 import com.vaadin.flow.component.notification.Notification;
@@ -36,7 +35,6 @@ public class RegisterView extends Composite {
                             email.getValue(),
                             password1.getValue(),
                             password2.getValue());
-                    UI.getCurrent().navigate("login");
                 })
         );
         layout.setAlignItems(FlexComponent.Alignment.CENTER);
@@ -45,23 +43,21 @@ public class RegisterView extends Composite {
 
     private void register(String username, String email, String pass1, String pass2) {
         if (username.trim().isEmpty())
-            Notification.show("Enter a username");
+            Notification.show("Enter a username").setPosition(Notification.Position.MIDDLE);
         else if (email.trim().isEmpty())
-            Notification.show("Enter an email");
-        else if (pass1.isEmpty())
-            Notification.show("Enter a password");
+            Notification.show("Enter an email").setPosition(Notification.Position.MIDDLE);
+        else if (pass1.isEmpty() || pass2.isEmpty())
+            Notification.show("Enter a password").setPosition(Notification.Position.MIDDLE);
         else if (!pass1.equals(pass2))
-            Notification.show("Passwords don't match");
+            Notification.show("Passwords don't match").setPosition(Notification.Position.MIDDLE);
         else {
-            if (!userService.validateEmail(email)) {
-                Notification.show("Use other email.");
-            }
-            else if (!userService.validateUsername(username)) {
-                Notification.show("User other username.");
-            }
+            if (userService.validateEmail(email))
+                Notification.show("Use other email.").setPosition(Notification.Position.MIDDLE);
+            else if (userService.validateUsername(username))
+                Notification.show("User other username.").setPosition(Notification.Position.MIDDLE);
             else {
                 userService.registerUser(email, username, pass1);
-                Notification.show("Check your email.");
+                Notification.show("Check your email.").setPosition(Notification.Position.MIDDLE);
             }
         }
     }

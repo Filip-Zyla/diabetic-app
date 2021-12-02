@@ -18,8 +18,9 @@ public class UserSettings {
     @Id
     private Long id;
 
-    @MapsId
     @OneToOne
+    @JoinColumn(name = "id")
+    @MapsId
     private User user;
 
     @Enumerated(EnumType.ORDINAL)

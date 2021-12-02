@@ -27,7 +27,7 @@ public class User {
     @Column(nullable = false, length = 50)
     private String email;
 
-    @OneToOne(cascade = CascadeType.ALL, optional = false)
+    @OneToOne(cascade = CascadeType.ALL, mappedBy = "user")
     private UserSettings settings;
 
     public User(String username, String pass, String email) {
