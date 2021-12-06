@@ -5,6 +5,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -36,10 +38,16 @@ public class Insulin {
 
     private String note;
 
-    public Insulin(Integer insulin, InsulinType type, LocalDateTime time, String note) {
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "user_id", nullable = false)
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    private User user;
+
+    public Insulin(Integer insulin, InsulinType type, LocalDateTime time, String note, User user) {
         this.insulin = insulin;
         this.type = type;
         this.time = time;
         this.note = note;
+        this.user = user;
     }
 }

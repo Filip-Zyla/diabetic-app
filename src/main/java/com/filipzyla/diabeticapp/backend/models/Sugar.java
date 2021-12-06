@@ -6,6 +6,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -41,11 +43,17 @@ public class Sugar {
 
     private String note;
 
-    public Sugar(Double sugar, SugarType type, SugarUnits units, LocalDateTime time, String note) {
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "user_id", nullable = false)
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    private User user;
+
+    public Sugar(Double sugar, SugarType type, SugarUnits units, LocalDateTime time, String note, User user) {
         this.sugar = sugar;
         this.type = type;
         this.units = units;
         this.time = time;
         this.note = note;
+        this.user = user;
     }
 }

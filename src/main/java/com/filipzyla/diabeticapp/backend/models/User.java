@@ -42,6 +42,14 @@ public class User {
     @Column(nullable = false, scale = 1)
     private Double hyperglycemiaAfterMeal;
 
+//    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+//    @JoinColumn(name = "id")
+//    private List<Sugar> sugars = new ArrayList<>();
+//
+//    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+//    @JoinColumn(name = "id")
+//    private List<Insulin> insulins = new ArrayList<>();
+
     public User(String username, String pass, String email) {
         this.email = email;
         this.username = username;

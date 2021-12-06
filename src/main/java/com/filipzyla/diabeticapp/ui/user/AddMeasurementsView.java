@@ -6,6 +6,7 @@ import com.filipzyla.diabeticapp.backend.enums.SugarType;
 import com.filipzyla.diabeticapp.backend.enums.SugarUnits;
 import com.filipzyla.diabeticapp.backend.models.Insulin;
 import com.filipzyla.diabeticapp.backend.models.Sugar;
+import com.filipzyla.diabeticapp.backend.models.User;
 import com.filipzyla.diabeticapp.backend.security.SecurityService;
 import com.filipzyla.diabeticapp.backend.service.InsulinService;
 import com.filipzyla.diabeticapp.backend.service.SugarService;
@@ -35,6 +36,8 @@ public class AddMeasurementsView extends VerticalLayout {
     private final InsulinService insulinService;
     private final UserService userService;
 
+    private final User user;
+
     private final VerticalLayout insulinLayout = new VerticalLayout();
     private final VerticalLayout sugarLayout = new VerticalLayout();
 
@@ -43,6 +46,9 @@ public class AddMeasurementsView extends VerticalLayout {
         this.sugarService = sugarService;
         this.insulinService = insulinService;
         this.userService = userService;
+
+        user = userService.findByUsername(securityService.getAuthenticatedUser());
+
 
         ComboBox<MeasurementType> comboBoxMeasurementType = new ComboBox("What do you want to add?");
         comboBoxMeasurementType.setItems(MeasurementType.values());
@@ -86,7 +92,7 @@ public class AddMeasurementsView extends VerticalLayout {
         });
 
         Button buttonSave = new Button("Save", save -> {
-            Sugar sugar = new Sugar(numField.getValue(), comboBoxType.getValue(), comboBoxUnits.getValue(), dateTimePicker.getValue(), textAreaNote.getValue());
+            Sugar sugar = new Sugar(numField.getValue(), comboBoxType.getValue(), comboBoxUnits.getValue(), dateTimePicker.getValue(), textAreaNote.getValue(), user);
             sugarService.save(sugar);
             Notification.show("Saved").setPosition(Notification.Position.MIDDLE);
             numField.setValue(null);
@@ -123,7 +129,7 @@ public class AddMeasurementsView extends VerticalLayout {
         });
 
         Button buttonSave = new Button("Save", save -> {
-            Insulin insulin = new Insulin(numField.getValue().intValue(), comboBoxType.getValue(), dateTimePicker.getValue(), textAreaNote.getValue());
+            Insulin insulin = new Insulin(numField.getValue().intValue(), comboBoxType.getValue(), dateTimePicker.getValue(), textAreaNote.getValue(), user);
             insulinService.save(insulin);
             Notification.show("Saved").setPosition(Notification.Position.MIDDLE);
             numField.setValue(null);

@@ -22,11 +22,11 @@ public class SugarService {
         sugarRepository.delete(sugar);
     }
 
-    public Sugar findFirstByOrderByTimeAsc() {
-        return sugarRepository.findFirstByOrderByTimeAsc();
+    public Sugar findFirstByOrderByTimeAsc(Long userId) {
+        return sugarRepository.findFirstByOrderByTimeAsc(userId);
     }
 
-    public List<Sugar> findAllOrderByTimeBetweenDates(LocalDate from, LocalDate to) {
-        return sugarRepository.findAllOrderByTimeBetweenDates(from, to);
+    public List<Sugar> findAllOrderByTimeBetweenDates(Long userId, LocalDate from, LocalDate to) {
+        return sugarRepository.findAllOrderByTimeBetweenDates(userId, from, to);
     }
 }

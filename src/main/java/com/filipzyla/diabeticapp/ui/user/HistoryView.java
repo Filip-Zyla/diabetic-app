@@ -45,6 +45,8 @@ public class HistoryView extends VerticalLayout {
     private final InsulinService insulinService;
     private final UserService userService;
 
+    private final User user;
+
     private final VerticalLayout layoutSugar = new VerticalLayout();
     private final VerticalLayout layoutInsulin = new VerticalLayout();
     private DatePicker datePickerFrom, datePickerTo;
@@ -54,6 +56,9 @@ public class HistoryView extends VerticalLayout {
         this.sugarService = sugarService;
         this.insulinService = insulinService;
         this.userService = userService;
+
+        user = userService.findByUsername(securityService.getAuthenticatedUser());
+
 
         Button buttonShowHistory = new Button("Show", event -> refreshHistoryGrid());
         setAlignItems(Alignment.CENTER);
@@ -91,7 +96,7 @@ public class HistoryView extends VerticalLayout {
                 })).setHeader("Modify");
 
 
-        Optional<List<Sugar>> sugarOpt = Optional.ofNullable(sugarService.findAllOrderByTimeBetweenDates(datePickerFrom.getValue(), datePickerTo.getValue().plusDays(1)));
+        Optional<List<Sugar>> sugarOpt = Optional.ofNullable(sugarService.findAllOrderByTimeBetweenDates(user.getUserId(), datePickerFrom.getValue(), datePickerTo.getValue().plusDays(1)));
         SugarUnits userUnits = user.getUnits();
         if (sugarOpt.isPresent()) {
             for (Sugar s : sugarOpt.get()) {
@@ -121,7 +126,7 @@ public class HistoryView extends VerticalLayout {
                     button.setIcon(new Icon(VaadinIcon.MENU));
                 })).setHeader("Modify");
 
-        Optional<List<Insulin>> sugarOpt = Optional.ofNullable(insulinService.findAllOrderByTimeBetweenDates(datePickerFrom.getValue(), datePickerTo.getValue().plusDays(1)));
+        Optional<List<Insulin>> sugarOpt = Optional.ofNullable(insulinService.findAllOrderByTimeBetweenDates(user.getUserId(), datePickerFrom.getValue(), datePickerTo.getValue().plusDays(1)));
         sugarOpt.ifPresent(gridInsulin::setItems);
         gridInsulin.setWidth(700, Unit.PIXELS);
         gridInsulin.setHeight(500, Unit.PIXELS);

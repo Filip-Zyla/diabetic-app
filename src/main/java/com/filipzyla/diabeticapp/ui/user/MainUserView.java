@@ -3,6 +3,7 @@ package com.filipzyla.diabeticapp.ui.user;
 import com.filipzyla.diabeticapp.backend.enums.SugarUnits;
 import com.filipzyla.diabeticapp.backend.models.Insulin;
 import com.filipzyla.diabeticapp.backend.models.Sugar;
+import com.filipzyla.diabeticapp.backend.models.User;
 import com.filipzyla.diabeticapp.backend.security.SecurityService;
 import com.filipzyla.diabeticapp.backend.service.InsulinService;
 import com.filipzyla.diabeticapp.backend.service.SugarService;
@@ -27,16 +28,16 @@ import java.util.Optional;
 @Route("home")
 public class MainUserView extends VerticalLayout {
 
-    private final SecurityService securityService;
     private final SugarService sugarService;
     private final InsulinService insulinService;
-    private final UserService userService;
+
+    private final User user;
 
     public MainUserView(SugarService sugarService, InsulinService insulinService, SecurityService securityService, UserService userService) {
-        this.securityService = securityService;
         this.sugarService = sugarService;
         this.insulinService = insulinService;
-        this.userService = userService;
+
+        user = userService.findByUsername(securityService.getAuthenticatedUser());
 
         add(new TopMenuBar(securityService), addLastMeasurements(), lowerButtons());
     }
@@ -53,9 +54,9 @@ public class MainUserView extends VerticalLayout {
         layoutLastSugar.setWidth("50%");
         layoutLastSugar.setAlignItems(Alignment.CENTER);
 
-        Optional<Sugar> sugarOpt = Optional.ofNullable(sugarService.findFirstByOrderByTimeAsc());
+        Optional<Sugar> sugarOpt = Optional.ofNullable(sugarService.findFirstByOrderByTimeAsc(user.getUserId()));
         if (sugarOpt.isPresent()) {
-            SugarUnits userUnits = userService.findByUsername(securityService.getAuthenticatedUser()).getUnits();
+            SugarUnits userUnits = user.getUnits();
             DecimalFormat f = new DecimalFormat("0.#");
 
             H3 labelSugarMain = new H3("Last sugar");
@@ -82,7 +83,7 @@ public class MainUserView extends VerticalLayout {
         layoutLastInsulin.setWidth("50%");
         layoutLastInsulin.setAlignItems(Alignment.CENTER);
 
-        Optional<Insulin> insulinOpt = Optional.ofNullable(insulinService.findFirstByOrderByTimeAsc());
+        Optional<Insulin> insulinOpt = Optional.ofNullable(insulinService.findFirstByOrderByTimeAsc(user.getUserId()));
         if (insulinOpt.isPresent()) {
             H3 labelInsulinMain = new H3("Last insulin");
             H5 labelInsulin = new H5(insulinOpt.get().getInsulin().toString() + " units");

@@ -11,9 +11,9 @@ import java.util.List;
 @Repository
 public interface InsulinRepository extends JpaRepository<Insulin, Long> {
 
-    @Query(value = "SELECT * FROM insulin ORDER BY time DESC LIMIT 1", nativeQuery = true)
-    Insulin findFirstByOrderByTimeAsc();
+    @Query(value = "SELECT * FROM insulin WHERE USER_ID = :userId ORDER BY time DESC LIMIT 1", nativeQuery = true)
+    Insulin findFirstByOrderByTimeAsc(Long userId);
 
-    @Query(value = "SELECT * FROM insulin WHERE time BETWEEN :start AND :end ORDER BY time DESC ", nativeQuery = true)
-    List<Insulin> findAllOrderByTimeBetweenDates(LocalDate start, LocalDate end);
+    @Query(value = "SELECT * FROM insulin WHERE USER_ID = :userId AND time BETWEEN :start AND :end ORDER BY time DESC ", nativeQuery = true)
+    List<Insulin> findAllOrderByTimeBetweenDates(Long userId, LocalDate start, LocalDate end);
 }
