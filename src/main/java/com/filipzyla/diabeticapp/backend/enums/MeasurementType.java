@@ -4,7 +4,7 @@ public enum MeasurementType {
     INSULIN("Insulin"),
     SUGAR("Sugar");
 
-    private String msg;
+    private final String msg;
 
     MeasurementType(String s) {
         msg = s;

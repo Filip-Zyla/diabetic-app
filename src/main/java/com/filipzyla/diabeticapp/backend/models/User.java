@@ -1,7 +1,7 @@
 package com.filipzyla.diabeticapp.backend.models;
 
 import com.filipzyla.diabeticapp.backend.enums.SugarUnits;
-import com.filipzyla.diabeticapp.backend.utility.SugarDefaultBoundaries;
+import com.filipzyla.diabeticapp.backend.utility.SugarDefaultSettings;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -42,21 +42,13 @@ public class User {
     @Column(nullable = false, scale = 1)
     private Double hyperglycemiaAfterMeal;
 
-//    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-//    @JoinColumn(name = "id")
-//    private List<Sugar> sugars = new ArrayList<>();
-//
-//    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-//    @JoinColumn(name = "id")
-//    private List<Insulin> insulins = new ArrayList<>();
-
     public User(String username, String pass, String email) {
         this.email = email;
         this.username = username;
         password = pass;
-        hypoglycemia = SugarDefaultBoundaries.DEFAULT_HYPOGLYCEMIA;
-        hyperglycemia = SugarDefaultBoundaries.DEFAULT_HYPERGLYCEMIA;
-        hyperglycemiaAfterMeal = SugarDefaultBoundaries.DEFAULT_HYPERGLYCEMIA_AFTER_MEAL;
-        units = SugarDefaultBoundaries.DEFAULT_UNITS;
+        hypoglycemia = SugarDefaultSettings.DEFAULT_HYPOGLYCEMIA;
+        hyperglycemia = SugarDefaultSettings.DEFAULT_HYPERGLYCEMIA;
+        hyperglycemiaAfterMeal = SugarDefaultSettings.DEFAULT_HYPERGLYCEMIA_AFTER_MEAL;
+        units = SugarDefaultSettings.DEFAULT_UNITS;
     }
 }

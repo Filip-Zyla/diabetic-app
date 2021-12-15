@@ -1,6 +1,5 @@
 package com.filipzyla.diabeticapp.ui.login;
 
-import com.filipzyla.diabeticapp.backend.security.SecurityService;
 import com.vaadin.flow.component.html.H2;
 import com.vaadin.flow.component.login.LoginForm;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
@@ -12,12 +11,9 @@ import com.vaadin.flow.router.RouterLink;
 @Route("login")
 public class LoginView extends VerticalLayout implements BeforeEnterObserver {
 
-    private final SecurityService securityService;
     private final LoginForm loginForm = new LoginForm();
 
-    public LoginView(SecurityService securityService) {
-        this.securityService = securityService;
-
+    public LoginView() {
         loginForm.getElement().setAttribute("no-autofocus", "");
         loginForm.setAction("login");
         setAlignItems(Alignment.CENTER);

@@ -65,12 +65,11 @@ public class MainUserView extends VerticalLayout {
             if (sugarOpt.get().getUnits() != userUnits) {
                 Double s = sugarOpt.get().getSugar() * sugarOpt.get().getUnits().getConversion();
                 labelSugar = new H5(f.format(s) + " " + userUnits.getMsg());
-                labelTypeSug = new H5(sugarOpt.get().getType().getMsg());
             }
             else {
                 labelSugar = new H5(f.format(sugarOpt.get().getSugar()) + " " + sugarOpt.get().getUnits().getMsg());
-                labelTypeSug = new H5(sugarOpt.get().getType().getMsg());
             }
+            labelTypeSug = new H5(sugarOpt.get().getType().getMsg());
             H5 labelTimeSug = new H5(sugarOpt.get().getTime().format(CustomDateTimeFormatter.formatter));
             Label labelNote = new Label(sugarOpt.get().getNote());
             layoutLastSugar.add(labelSugarMain, labelSugar, labelTypeSug, labelTimeSug, labelNote);

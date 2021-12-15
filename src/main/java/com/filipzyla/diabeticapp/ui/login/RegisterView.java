@@ -8,6 +8,7 @@ import com.vaadin.flow.component.html.H2;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.component.textfield.EmailField;
 import com.vaadin.flow.component.textfield.PasswordField;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.Route;
@@ -23,12 +24,12 @@ public class RegisterView extends Composite {
 
     @Override
     protected Component initContent() {
-        TextField email = new TextField("Email");
+        EmailField email = new EmailField("Email");
         TextField username = new TextField("Username");
         PasswordField password1 = new PasswordField("Password");
         PasswordField password2 = new PasswordField("Confirm password");
         VerticalLayout layout = new VerticalLayout();
-        layout.add(new H2("Register"), username, email, password1, password2,
+        layout.add(new H2("Register"), email, username, password1, password2,
                 new Button("Create user", event -> {
                     register(
                             username.getValue(),
@@ -44,8 +45,6 @@ public class RegisterView extends Composite {
     private void register(String username, String email, String pass1, String pass2) {
         if (username.trim().isEmpty())
             Notification.show("Enter a username").setPosition(Notification.Position.MIDDLE);
-        else if (email.trim().isEmpty())
-            Notification.show("Enter an email").setPosition(Notification.Position.MIDDLE);
         else if (pass1.isEmpty() || pass2.isEmpty())
             Notification.show("Enter a password").setPosition(Notification.Position.MIDDLE);
         else if (!pass1.equals(pass2))

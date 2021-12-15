@@ -10,10 +10,12 @@ import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.html.H2;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.component.textfield.EmailField;
 import com.vaadin.flow.component.textfield.NumberField;
 import com.vaadin.flow.component.textfield.PasswordField;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.Route;
+import org.apache.commons.validator.routines.EmailValidator;
 import org.springframework.transaction.annotation.Transactional;
 
 @Route("settings")
@@ -28,7 +30,7 @@ public class SettingsView extends VerticalLayout {
         username.setValue(user.getUsername());
         PasswordField password = new PasswordField("Password");
         password.setValue(user.getPassword());
-        TextField email = new TextField("Email");
+        EmailField email = new EmailField("Email");
         email.setValue(user.getEmail());
         NumberField hypoglycemia = new NumberField("Hypoglycemia level");
         hypoglycemia.setValue(user.getHypoglycemia());
@@ -43,6 +45,9 @@ public class SettingsView extends VerticalLayout {
         Button saveButton = new Button("Save changes", event -> {
             if (!username.getValue().equals(user.getUsername()) && userService.validateUsername(username.getValue())) {
                 Notification.show("Username already exist!").setPosition(Notification.Position.MIDDLE);
+            }
+            else if (!EmailValidator.getInstance().isValid(email.getValue())) {
+                Notification.show("Wrong email!").setPosition(Notification.Position.MIDDLE);
             }
             else if (!email.getValue().equals(user.getEmail()) && userService.validateEmail(email.getValue())) {
                 Notification.show("Email already exist!").setPosition(Notification.Position.MIDDLE);

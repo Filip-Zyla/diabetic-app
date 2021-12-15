@@ -13,7 +13,6 @@ import com.filipzyla.diabeticapp.backend.service.SugarService;
 import com.filipzyla.diabeticapp.backend.service.UserService;
 import com.filipzyla.diabeticapp.ui.components.TopMenuBar;
 import com.vaadin.flow.component.Component;
-import com.vaadin.flow.component.Unit;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.datetimepicker.DateTimePicker;
@@ -52,6 +51,7 @@ public class AddMeasurementsView extends VerticalLayout {
 
         ComboBox<MeasurementType> comboBoxMeasurementType = new ComboBox("What do you want to add?");
         comboBoxMeasurementType.setItems(MeasurementType.values());
+        comboBoxMeasurementType.setWidth("200px");
 
         comboBoxMeasurementType.addValueChangeListener(event -> {
             insulinLayout.removeAll();
@@ -62,7 +62,6 @@ public class AddMeasurementsView extends VerticalLayout {
             else if (event.getValue() == MeasurementType.INSULIN)
                 add(addInsulinLayout());
         });
-
         setAlignItems(Alignment.CENTER);
         add(new TopMenuBar(securityService), comboBoxMeasurementType);
     }
@@ -72,19 +71,22 @@ public class AddMeasurementsView extends VerticalLayout {
 
         NumberField numField = new NumberField("Sugar");
         numField.setStep(0.1);
+        numField.setWidth("75px");
         ComboBox<SugarUnits> comboBoxUnits = new ComboBox("Units");
         comboBoxUnits.setItems(SugarUnits.values());
         comboBoxUnits.setItemLabelGenerator(SugarUnits::getMsg);
-        comboBoxUnits.setWidth(110, Unit.PIXELS);
+        comboBoxUnits.setWidth("110px");
         comboBoxUnits.setValue(userUnits);
         ComboBox<SugarType> comboBoxType = new ComboBox("Type");
         comboBoxType.setItems(SugarType.values());
+        comboBoxType.setWidth("200px");
         comboBoxType.setItemLabelGenerator(SugarType::getMsg);
         DateTimePicker dateTimePicker = new DateTimePicker("Time");
         dateTimePicker.setValue(LocalDateTime.now());
         dateTimePicker.setStep(Duration.ofMinutes(1));
+        dateTimePicker.setWidth("400px");
         TextArea textAreaNote = new TextArea("Note");
-        textAreaNote.setWidth(400, Unit.PIXELS);
+        textAreaNote.setWidth("400px");
         textAreaNote.setMaxLength(255);
         textAreaNote.setValueChangeMode(ValueChangeMode.EAGER);
         textAreaNote.addValueChangeListener(e -> {
@@ -104,7 +106,9 @@ public class AddMeasurementsView extends VerticalLayout {
 
         HorizontalLayout sugarWithUnitsLayout = new HorizontalLayout();
         sugarWithUnitsLayout.add(numField, comboBoxUnits);
-        sugarWithUnitsLayout.setAlignItems(Alignment.CENTER);
+        sugarWithUnitsLayout.setWidth("200px");
+        sugarWithUnitsLayout.setJustifyContentMode(JustifyContentMode.CENTER);
+        sugarWithUnitsLayout.setDefaultVerticalComponentAlignment(Alignment.CENTER);
 
         sugarLayout.setAlignItems(Alignment.CENTER);
         sugarLayout.add(sugarWithUnitsLayout, comboBoxType, dateTimePicker, textAreaNote, buttonSave);
@@ -114,14 +118,17 @@ public class AddMeasurementsView extends VerticalLayout {
     private Component addInsulinLayout() {
         NumberField numField = new NumberField("Insulin");
         numField.setStep(1);
+        numField.setWidth("200px");
         ComboBox<InsulinType> comboBoxType = new ComboBox("Type");
+        comboBoxType.setWidth("200px");
         comboBoxType.setItems(InsulinType.values());
         comboBoxType.setItemLabelGenerator(InsulinType::getMsg);
         DateTimePicker dateTimePicker = new DateTimePicker("Time");
         dateTimePicker.setValue(LocalDateTime.now());
         dateTimePicker.setStep(Duration.ofMinutes(1));
+        dateTimePicker.setWidth("400px");
         TextArea textAreaNote = new TextArea("Note");
-        textAreaNote.setWidth(400, Unit.PIXELS);
+        textAreaNote.setWidth("400px");
         textAreaNote.setMaxLength(255);
         textAreaNote.setValueChangeMode(ValueChangeMode.EAGER);
         textAreaNote.addValueChangeListener(e -> {

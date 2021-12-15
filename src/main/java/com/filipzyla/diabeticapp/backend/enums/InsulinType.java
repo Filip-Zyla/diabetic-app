@@ -5,7 +5,7 @@ public enum InsulinType {
     CORRECT("Correction"),
     MEAL("Food");
 
-    private String msg;
+    private final String msg;
 
     InsulinType(String s) {
         msg = s;

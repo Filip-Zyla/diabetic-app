@@ -12,11 +12,8 @@ import com.github.appreciated.apexcharts.config.xaxis.XAxisType;
 import com.vaadin.flow.component.html.Div;
 
 public class SugarLineChart extends Div {
-
-    private SugarRepository sugarRepository;
-
+    
     public SugarLineChart(SugarRepository sugarRepository) {
-        this.sugarRepository = sugarRepository;
         ApexCharts sugarChart =
                 ApexChartsBuilder.get()
                         .withChart(

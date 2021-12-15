@@ -84,7 +84,7 @@ public class HistoryView extends VerticalLayout {
 
     private Component sugarGrid() {
         final User user = userService.findByUsername(securityService.getAuthenticatedUser());
-        DecimalFormat f = new DecimalFormat("0.#"); // !!!!!!!!
+        DecimalFormat f = new DecimalFormat("0.#"); //TODO
         Grid<Sugar> gridSugar = new Grid(Sugar.class, false);
         gridSugar.addColumn(sugar -> f.format(sugar.getSugar()) + " " + sugar.getUnits().getMsg()).setHeader("Sugar");
         gridSugar.addColumn(sugar -> sugar.getType().getMsg()).setHeader("Type");

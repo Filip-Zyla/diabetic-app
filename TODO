@@ -1,28 +1,22 @@
+- TODO's
 !!! Functionality !!!
 - users
-    - update: userName, password, email
+    - update password and email, validate user
     - delete
-    - logging, retrieve password, register, emails/confirm by email
-    - user settings init during registration
-    - add user id to sugar and insulin
+    - forgot password, register confirm by email
 - admin functionality
-- default units of sugar adn boundaries
 - security
-    - password encryption
-    - ssl
-    - spring security
-    - user token?
+    - password encryption, ssl, user token?
 - admin and user roles
-- caching
-- scheduled reports,
+- caching, get user setting only?
+- email
+- scheduled reports
 - different languages
-- email all
-- validatrion and boundareis of all inputs, boudaries for given sugar unit
-
+- validatrion and boundareis of all inputs
 !!! UI !!!
 - history sugar with colors if > or <
-- styling
-- login page, retrieve password, register
-- settings
+- styling, css
+- login page, retrieve password
+    - register to home, add some back button
 - graphs, charts, show sugar boundaries
 - admin views

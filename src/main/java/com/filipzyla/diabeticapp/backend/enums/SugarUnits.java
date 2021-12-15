@@ -8,6 +8,7 @@ public enum SugarUnits {
     MOLES_TO_GRAMS = 18
     GRAMS_TO_MOLES = 0.056
      */
+
     private final String msg;
     private final double conversion;
 

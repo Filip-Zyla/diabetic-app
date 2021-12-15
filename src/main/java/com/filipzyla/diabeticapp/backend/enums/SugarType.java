@@ -5,7 +5,7 @@ public enum SugarType {
     AFTER_MEAL("After meal"),
     EMPTY_STOMACH("On empty stomach");
 
-    private String msg;
+    private final String msg;
 
     SugarType(String s) {
         msg = s;
