@@ -22,7 +22,6 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.Route;
 
-import java.text.DecimalFormat;
 import java.util.Optional;
 
 @Route("home")
@@ -57,19 +56,10 @@ public class MainUserView extends VerticalLayout {
         Optional<Sugar> sugarOpt = Optional.ofNullable(sugarService.findFirstByOrderByTimeAsc(user.getUserId()));
         if (sugarOpt.isPresent()) {
             SugarUnits userUnits = user.getUnits();
-            DecimalFormat f = new DecimalFormat("0.#");
 
             H3 labelSugarMain = new H3("Last sugar");
-            H5 labelSugar;
-            H5 labelTypeSug;
-            if (sugarOpt.get().getUnits() != userUnits) {
-                Double s = sugarOpt.get().getSugar() * sugarOpt.get().getUnits().getConversion();
-                labelSugar = new H5(f.format(s) + " " + userUnits.getMsg());
-            }
-            else {
-                labelSugar = new H5(f.format(sugarOpt.get().getSugar()) + " " + sugarOpt.get().getUnits().getMsg());
-            }
-            labelTypeSug = new H5(sugarOpt.get().getType().getMsg());
+            H5 labelSugar = new H5(sugarOpt.get().getSugar() + " " + userUnits.getMsg());
+            H5 labelTypeSug = new H5(sugarOpt.get().getType().getMsg());
             H5 labelTimeSug = new H5(sugarOpt.get().getTime().format(CustomDateTimeFormatter.formatter));
             Label labelNote = new Label(sugarOpt.get().getNote());
             layoutLastSugar.add(labelSugarMain, labelSugar, labelTypeSug, labelTimeSug, labelNote);

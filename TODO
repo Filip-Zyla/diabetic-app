@@ -1,18 +1,20 @@
 - TODO's
 !!! Functionality !!!
 - users
-    - update password and email, validate user
-    - delete
-    - forgot password, register confirm by email
-- admin functionality
+    - forgot password email valid for 1 day, register confirm by email
 - security
     - password encryption, ssl, user token?
 - admin and user roles
-- caching, get user setting only?
-- email
-- scheduled reports
-- different languages
+    - admin func
 - validatrion and boundareis of all inputs
+    - password, username
+    - sugar settings and inputs, units change
+- caching, get user setting only?
+- different languages
+- scheduled reports
+- import save files
+- tests (nexDoor), swaager
+- MILI_MOLS units
 !!! UI !!!
 - history sugar with colors if > or <
 - styling, css

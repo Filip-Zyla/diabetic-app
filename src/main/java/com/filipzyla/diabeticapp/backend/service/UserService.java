@@ -36,8 +36,13 @@ public class UserService {
         return userRepository.existsByUsername(username);
     }
 
-    public void registerUser(String email, String username, String pass) {
+    public boolean registerUser(String email, String username, String pass) {
         User user = new User(username, pass, email);
         userRepository.save(user);
+        return true;
+    }
+
+    public void deleteUser(User user) {
+        userRepository.delete(user);
     }
 }

@@ -16,6 +16,7 @@ import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.datetimepicker.DateTimePicker;
+import com.vaadin.flow.component.html.H5;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
@@ -30,10 +31,8 @@ import java.time.LocalDateTime;
 @Route("add")
 public class AddMeasurementsView extends VerticalLayout {
 
-    private final SecurityService securityService;
     private final SugarService sugarService;
     private final InsulinService insulinService;
-    private final UserService userService;
 
     private final User user;
 
@@ -41,10 +40,8 @@ public class AddMeasurementsView extends VerticalLayout {
     private final VerticalLayout sugarLayout = new VerticalLayout();
 
     public AddMeasurementsView(SugarService sugarService, InsulinService insulinService, SecurityService securityService, UserService userService) {
-        this.securityService = securityService;
         this.sugarService = sugarService;
         this.insulinService = insulinService;
-        this.userService = userService;
 
         user = userService.findByUsername(securityService.getAuthenticatedUser());
 
@@ -67,16 +64,9 @@ public class AddMeasurementsView extends VerticalLayout {
     }
 
     private Component addSugarLayout() {
-        SugarUnits userUnits = userService.findByUsername(securityService.getAuthenticatedUser()).getUnits();
-
         NumberField numField = new NumberField("Sugar");
-        numField.setStep(0.1);
-        numField.setWidth("75px");
-        ComboBox<SugarUnits> comboBoxUnits = new ComboBox("Units");
-        comboBoxUnits.setItems(SugarUnits.values());
-        comboBoxUnits.setItemLabelGenerator(SugarUnits::getMsg);
-        comboBoxUnits.setWidth("110px");
-        comboBoxUnits.setValue(userUnits);
+        numField.setStep(1);
+        numField.setWidth("140px");
         ComboBox<SugarType> comboBoxType = new ComboBox("Type");
         comboBoxType.setItems(SugarType.values());
         comboBoxType.setWidth("200px");
@@ -94,18 +84,17 @@ public class AddMeasurementsView extends VerticalLayout {
         });
 
         Button buttonSave = new Button("Save", save -> {
-            Sugar sugar = new Sugar(numField.getValue(), comboBoxType.getValue(), comboBoxUnits.getValue(), dateTimePicker.getValue(), textAreaNote.getValue(), user);
+            Sugar sugar = new Sugar(numField.getValue().intValue(), comboBoxType.getValue(), dateTimePicker.getValue(), textAreaNote.getValue(), user);
             sugarService.save(sugar);
             Notification.show("Saved").setPosition(Notification.Position.MIDDLE);
             numField.setValue(null);
             comboBoxType.setValue(null);
-            comboBoxUnits.setValue(null);
             dateTimePicker.setValue(LocalDateTime.now());
             textAreaNote.setValue("");
         });
 
         HorizontalLayout sugarWithUnitsLayout = new HorizontalLayout();
-        sugarWithUnitsLayout.add(numField, comboBoxUnits);
+        sugarWithUnitsLayout.add(numField, new H5(SugarUnits.MILLI_GRAM.getMsg()));
         sugarWithUnitsLayout.setWidth("200px");
         sugarWithUnitsLayout.setJustifyContentMode(JustifyContentMode.CENTER);
         sugarWithUnitsLayout.setDefaultVerticalComponentAlignment(Alignment.CENTER);

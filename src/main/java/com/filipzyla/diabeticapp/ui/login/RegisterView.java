@@ -55,6 +55,10 @@ public class RegisterView extends Composite {
             else if (userService.validateUsername(username))
                 Notification.show("User other username.").setPosition(Notification.Position.MIDDLE);
             else {
+                //TODO
+                //if (userService.registerUser(email, username, pass1))
+                //else
+                //Notification.show("Something gone wrong, try again.").setPosition(Notification.Position.MIDDLE);
                 userService.registerUser(email, username, pass1);
                 Notification.show("Check your email.").setPosition(Notification.Position.MIDDLE);
             }

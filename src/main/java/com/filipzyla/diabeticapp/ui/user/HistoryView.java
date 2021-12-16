@@ -31,7 +31,6 @@ import com.vaadin.flow.component.textfield.TextArea;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
 import com.vaadin.flow.router.Route;
 
-import java.text.DecimalFormat;
 import java.time.Duration;
 import java.time.LocalDate;
 import java.util.List;
@@ -40,10 +39,8 @@ import java.util.Optional;
 @Route("history")
 public class HistoryView extends VerticalLayout {
 
-    private final SecurityService securityService;
     private final SugarService sugarService;
     private final InsulinService insulinService;
-    private final UserService userService;
 
     private final User user;
 
@@ -52,14 +49,11 @@ public class HistoryView extends VerticalLayout {
     private DatePicker datePickerFrom, datePickerTo;
 
     public HistoryView(SugarService sugarService, InsulinService insulinService, SecurityService securityService, UserService userService) {
-        this.securityService = securityService;
         this.sugarService = sugarService;
         this.insulinService = insulinService;
-        this.userService = userService;
 
         user = userService.findByUsername(securityService.getAuthenticatedUser());
-
-
+        
         Button buttonShowHistory = new Button("Show", event -> refreshHistoryGrid());
         setAlignItems(Alignment.CENTER);
 
@@ -83,10 +77,8 @@ public class HistoryView extends VerticalLayout {
     }
 
     private Component sugarGrid() {
-        final User user = userService.findByUsername(securityService.getAuthenticatedUser());
-        DecimalFormat f = new DecimalFormat("0.#"); //TODO
         Grid<Sugar> gridSugar = new Grid(Sugar.class, false);
-        gridSugar.addColumn(sugar -> f.format(sugar.getSugar()) + " " + sugar.getUnits().getMsg()).setHeader("Sugar");
+        gridSugar.addColumn(sugar -> sugar.getSugar() + " " + sugar.getUnits().getMsg()).setHeader("Sugar");
         gridSugar.addColumn(sugar -> sugar.getType().getMsg()).setHeader("Type");
         gridSugar.addColumn(sugar -> sugar.getTime().format(CustomDateTimeFormatter.formatter)).setHeader("Time");
         gridSugar.addColumn(
@@ -98,15 +90,6 @@ public class HistoryView extends VerticalLayout {
 
         Optional<List<Sugar>> sugarOpt = Optional.ofNullable(sugarService.findAllOrderByTimeBetweenDates(user.getUserId(), datePickerFrom.getValue(), datePickerTo.getValue().plusDays(1)));
         SugarUnits userUnits = user.getUnits();
-        if (sugarOpt.isPresent()) {
-            for (Sugar s : sugarOpt.get()) {
-                if (s.getUnits() != userUnits) {
-                    Double sug = s.getSugar() * s.getUnits().getConversion();
-                    s.setSugar(sug);
-                    s.setUnits(userUnits);
-                }
-            }
-        }
         sugarOpt.ifPresent(gridSugar::setItems);
         gridSugar.setWidth(700, Unit.PIXELS);
         gridSugar.setHeight(500, Unit.PIXELS);
@@ -140,10 +123,7 @@ public class HistoryView extends VerticalLayout {
         dialog.open();
 
         NumberField numField = new NumberField("Sugar");
-        numField.setStep(0.1);
-        ComboBox<SugarUnits> comboBoxUnits = new ComboBox("Units");
-        comboBoxUnits.setItems(SugarUnits.values());
-        comboBoxUnits.setItemLabelGenerator(SugarUnits::getMsg);
+        numField.setStep(1);
         ComboBox<SugarType> comboBoxType = new ComboBox("Type");
         comboBoxType.setItems(SugarType.values());
         comboBoxType.setItemLabelGenerator(SugarType::getMsg);
@@ -153,18 +133,16 @@ public class HistoryView extends VerticalLayout {
         textAreaNote.setWidth(300, Unit.PIXELS);
         textAreaNote.setMaxLength(200);
 
-        numField.setValue(sugar.getSugar());
-        comboBoxUnits.setValue(sugar.getUnits());
+        numField.setValue(Double.valueOf(sugar.getSugar()));
         comboBoxType.setValue(sugar.getType());
         dateTimePicker.setValue(sugar.getTime());
         textAreaNote.setValue(sugar.getNote());
 
         VerticalLayout dialogLayout = new VerticalLayout();
-        dialogLayout.add(numField, comboBoxUnits, comboBoxType, dateTimePicker, textAreaNote);
+        dialogLayout.add(numField, comboBoxType, dateTimePicker, textAreaNote);
 
         Button buttonCommit = new Button("Save", save -> {
-            sugar.setSugar(numField.getValue());
-            sugar.setUnits(comboBoxUnits.getValue());
+            sugar.setSugar(numField.getValue().intValue());
             sugar.setType(comboBoxType.getValue());
             sugar.setTime(dateTimePicker.getValue());
             sugar.setNote(textAreaNote.getValue());
