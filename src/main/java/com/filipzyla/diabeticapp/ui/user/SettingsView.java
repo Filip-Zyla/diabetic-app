@@ -3,6 +3,8 @@ package com.filipzyla.diabeticapp.ui.user;
 import com.filipzyla.diabeticapp.backend.models.User;
 import com.filipzyla.diabeticapp.backend.security.SecurityService;
 import com.filipzyla.diabeticapp.backend.service.UserService;
+import com.filipzyla.diabeticapp.backend.utility.SugarDefaultSettings;
+import com.filipzyla.diabeticapp.backend.utility.Validators;
 import com.filipzyla.diabeticapp.ui.components.TopMenuBar;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.dialog.Dialog;
@@ -96,21 +98,43 @@ public class SettingsView extends VerticalLayout {
     private VerticalLayout settingsLayout(UserService userService) {
         NumberField hypoglycemia = new NumberField("Hypoglycemia");
         hypoglycemia.setValue(user.getHypoglycemia());
+        hypoglycemia.setStep(1);
         NumberField hyperglycemia = new NumberField("Before Meal");
         hyperglycemia.setValue(user.getHyperglycemia());
+        hyperglycemia.setStep(1);
         NumberField hyperglycemiaAfterMeal = new NumberField("After meal");
         hyperglycemiaAfterMeal.setValue(user.getHyperglycemiaAfterMeal());
+        hyperglycemiaAfterMeal.setStep(1);
 
         Button saveSugar = new Button("Save changes", event -> {
-            user.setHypoglycemia(hypoglycemia.getValue());
-            user.setHyperglycemia(hyperglycemia.getValue());
-            user.setHyperglycemiaAfterMeal(hyperglycemiaAfterMeal.getValue());
+            if (!Validators.validateSugar(hypoglycemia.getValue().intValue())
+                    || !Validators.validateSugar(hyperglycemia.getValue().intValue())
+                    || !Validators.validateSugar(hyperglycemiaAfterMeal.getValue().intValue())) {
+                Notification.show("Values must be between " + Validators.MIN_SUGAR + " - " + Validators.MAX_SUGAR + "!")
+                        .setPosition(Notification.Position.MIDDLE);
+            }
+            else {
+                user.setHypoglycemia(hypoglycemia.getValue());
+                user.setHyperglycemia(hyperglycemia.getValue());
+                user.setHyperglycemiaAfterMeal(hyperglycemiaAfterMeal.getValue());
+                userService.saveUser(user);
+                Notification.show("Changes saved").setPosition(Notification.Position.MIDDLE);
+            }
+        });
+
+        Button defaultSettings = new Button("Default values", event -> {
+            user.setHypoglycemia(SugarDefaultSettings.DEFAULT_HYPOGLYCEMIA);
+            user.setHyperglycemia(SugarDefaultSettings.DEFAULT_HYPERGLYCEMIA);
+            user.setHyperglycemiaAfterMeal(SugarDefaultSettings.DEFAULT_HYPERGLYCEMIA_AFTER_MEAL);
+            hypoglycemia.setValue(SugarDefaultSettings.DEFAULT_HYPOGLYCEMIA);
+            hyperglycemia.setValue(SugarDefaultSettings.DEFAULT_HYPERGLYCEMIA);
+            hyperglycemiaAfterMeal.setValue(SugarDefaultSettings.DEFAULT_HYPERGLYCEMIA_AFTER_MEAL);
             userService.saveUser(user);
-            Notification.show("Changes saved!").setPosition(Notification.Position.MIDDLE);
+            Notification.show("Default values set").setPosition(Notification.Position.MIDDLE);
         });
 
         VerticalLayout settingsLayout = new VerticalLayout();
-        settingsLayout.add(hypoglycemia, hyperglycemia, hyperglycemiaAfterMeal, saveSugar);
+        settingsLayout.add(hypoglycemia, hyperglycemia, hyperglycemiaAfterMeal, saveSugar, defaultSettings);
         return settingsLayout;
     }
 }

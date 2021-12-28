@@ -12,5 +12,4 @@ public enum SugarUnits {
     public String getMsg() {
         return msg;
     }
-
 }

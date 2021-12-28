@@ -11,6 +11,7 @@ import com.filipzyla.diabeticapp.backend.service.InsulinService;
 import com.filipzyla.diabeticapp.backend.service.SugarService;
 import com.filipzyla.diabeticapp.backend.service.UserService;
 import com.filipzyla.diabeticapp.backend.utility.CustomDateTimeFormatter;
+import com.filipzyla.diabeticapp.backend.utility.Validators;
 import com.filipzyla.diabeticapp.ui.components.TopMenuBar;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.Unit;
@@ -24,11 +25,13 @@ import com.vaadin.flow.component.html.H2;
 import com.vaadin.flow.component.html.H4;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
+import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.NumberField;
 import com.vaadin.flow.component.textfield.TextArea;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
+import com.vaadin.flow.data.value.ValueChangeMode;
 import com.vaadin.flow.router.Route;
 
 import java.time.Duration;
@@ -53,7 +56,7 @@ public class HistoryView extends VerticalLayout {
         this.insulinService = insulinService;
 
         user = userService.findByUsername(securityService.getAuthenticatedUser());
-        
+
         Button buttonShowHistory = new Button("Show", event -> refreshHistoryGrid());
         setAlignItems(Alignment.CENTER);
 
@@ -131,7 +134,11 @@ public class HistoryView extends VerticalLayout {
         dateTimePicker.setStep(Duration.ofMinutes(1));
         TextArea textAreaNote = new TextArea("Note");
         textAreaNote.setWidth(300, Unit.PIXELS);
-        textAreaNote.setMaxLength(200);
+        textAreaNote.setMaxLength(255);
+        textAreaNote.setValueChangeMode(ValueChangeMode.EAGER);
+        textAreaNote.addValueChangeListener(e -> {
+            e.getSource().setHelperText(e.getValue().length() + "/" + 255);
+        });
 
         numField.setValue(Double.valueOf(sugar.getSugar()));
         comboBoxType.setValue(sugar.getType());
@@ -142,13 +149,19 @@ public class HistoryView extends VerticalLayout {
         dialogLayout.add(numField, comboBoxType, dateTimePicker, textAreaNote);
 
         Button buttonCommit = new Button("Save", save -> {
-            sugar.setSugar(numField.getValue().intValue());
-            sugar.setType(comboBoxType.getValue());
-            sugar.setTime(dateTimePicker.getValue());
-            sugar.setNote(textAreaNote.getValue());
-            sugarService.save(sugar);
-            dialog.close();
-            refreshHistoryGrid();
+            if (Validators.validateSugar(numField.getValue().intValue())) {
+                sugar.setSugar(numField.getValue().intValue());
+                sugar.setType(comboBoxType.getValue());
+                sugar.setTime(dateTimePicker.getValue());
+                sugar.setNote(textAreaNote.getValue());
+                sugarService.save(sugar);
+                dialog.close();
+                refreshHistoryGrid();
+            }
+            else {
+                Notification.show("Values must be between " + Validators.MIN_SUGAR + " - " + Validators.MAX_SUGAR + "!")
+                        .setPosition(Notification.Position.MIDDLE);
+            }
         });
         Button buttonDelete = new Button("Delete", delete -> {
             sugarService.delete(sugar);
@@ -178,7 +191,11 @@ public class HistoryView extends VerticalLayout {
         dateTimePicker.setStep(Duration.ofMinutes(1));
         TextArea textAreaNote = new TextArea("Note");
         textAreaNote.setWidth(300, Unit.PIXELS);
-        textAreaNote.setMaxLength(200);
+        textAreaNote.setMaxLength(255);
+        textAreaNote.setValueChangeMode(ValueChangeMode.EAGER);
+        textAreaNote.addValueChangeListener(e -> {
+            e.getSource().setHelperText(e.getValue().length() + "/" + 255);
+        });
 
         numField.setValue(Double.valueOf(insulin.getInsulin()));
         comboBox.setValue(insulin.getType());
@@ -189,13 +206,19 @@ public class HistoryView extends VerticalLayout {
         dialogLayout.add(numField, comboBox, dateTimePicker, textAreaNote);
 
         Button buttonCommit = new Button("Save", save -> {
-            insulin.setInsulin(numField.getValue().intValue());
-            insulin.setType(comboBox.getValue());
-            insulin.setTime(dateTimePicker.getValue());
-            insulin.setNote(textAreaNote.getValue());
-            insulinService.save(insulin);
-            dialog.close();
-            refreshHistoryGrid();
+            if (Validators.validateInsulin(numField.getValue().intValue())) {
+                insulin.setInsulin(numField.getValue().intValue());
+                insulin.setType(comboBox.getValue());
+                insulin.setTime(dateTimePicker.getValue());
+                insulin.setNote(textAreaNote.getValue());
+                insulinService.save(insulin);
+                dialog.close();
+                refreshHistoryGrid();
+            }
+            else {
+                Notification.show("Values must be between " + Validators.MIN_INSULIN + " - " + Validators.MAX_INSULIN + "!")
+                        .setPosition(Notification.Position.MIDDLE);
+            }
         });
         Button buttonDelete = new Button("Delete", delete -> {
             insulinService.delete(insulin);

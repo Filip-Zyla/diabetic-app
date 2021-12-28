@@ -11,6 +11,7 @@ import com.filipzyla.diabeticapp.backend.security.SecurityService;
 import com.filipzyla.diabeticapp.backend.service.InsulinService;
 import com.filipzyla.diabeticapp.backend.service.SugarService;
 import com.filipzyla.diabeticapp.backend.service.UserService;
+import com.filipzyla.diabeticapp.backend.utility.Validators;
 import com.filipzyla.diabeticapp.ui.components.TopMenuBar;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.button.Button;
@@ -84,13 +85,22 @@ public class AddMeasurementsView extends VerticalLayout {
         });
 
         Button buttonSave = new Button("Save", save -> {
-            Sugar sugar = new Sugar(numField.getValue().intValue(), comboBoxType.getValue(), dateTimePicker.getValue(), textAreaNote.getValue(), user);
-            sugarService.save(sugar);
-            Notification.show("Saved").setPosition(Notification.Position.MIDDLE);
-            numField.setValue(null);
-            comboBoxType.setValue(null);
-            dateTimePicker.setValue(LocalDateTime.now());
-            textAreaNote.setValue("");
+            if (numField.isEmpty() || comboBoxType.isEmpty()) {
+                Notification.show("Some fields are empty!").setPosition(Notification.Position.MIDDLE);
+            }
+            else if (Validators.validateSugar(numField.getValue().intValue())) {
+                Sugar sugar = new Sugar(numField.getValue().intValue(), comboBoxType.getValue(), dateTimePicker.getValue(), textAreaNote.getValue(), user);
+                sugarService.save(sugar);
+                Notification.show("Saved").setPosition(Notification.Position.MIDDLE);
+                numField.setValue(null);
+                comboBoxType.setValue(null);
+                dateTimePicker.setValue(LocalDateTime.now());
+                textAreaNote.setValue("");
+            }
+            else {
+                Notification.show("Values must be between " + Validators.MIN_SUGAR + " - " + Validators.MAX_SUGAR + "!")
+                        .setPosition(Notification.Position.MIDDLE);
+            }
         });
 
         HorizontalLayout sugarWithUnitsLayout = new HorizontalLayout();
@@ -125,13 +135,22 @@ public class AddMeasurementsView extends VerticalLayout {
         });
 
         Button buttonSave = new Button("Save", save -> {
-            Insulin insulin = new Insulin(numField.getValue().intValue(), comboBoxType.getValue(), dateTimePicker.getValue(), textAreaNote.getValue(), user);
-            insulinService.save(insulin);
-            Notification.show("Saved").setPosition(Notification.Position.MIDDLE);
-            numField.setValue(null);
-            comboBoxType.setValue(null);
-            dateTimePicker.setValue(LocalDateTime.now());
-            textAreaNote.setValue("");
+            if (numField.isEmpty() || comboBoxType.isEmpty()) {
+                Notification.show("Some fields are empty!").setPosition(Notification.Position.MIDDLE);
+            }
+            else if (Validators.validateInsulin(numField.getValue().intValue())) {
+                Insulin insulin = new Insulin(numField.getValue().intValue(), comboBoxType.getValue(), dateTimePicker.getValue(), textAreaNote.getValue(), user);
+                insulinService.save(insulin);
+                Notification.show("Saved").setPosition(Notification.Position.MIDDLE);
+                numField.setValue(null);
+                comboBoxType.setValue(null);
+                dateTimePicker.setValue(LocalDateTime.now());
+                textAreaNote.setValue("");
+            }
+            else {
+                Notification.show("Values must be between " + Validators.MIN_INSULIN + " - " + Validators.MAX_INSULIN + "!")
+                        .setPosition(Notification.Position.MIDDLE);
+            }
         });
 
         insulinLayout.setAlignItems(Alignment.CENTER);

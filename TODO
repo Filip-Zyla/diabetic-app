@@ -6,17 +6,15 @@
     - password encryption, ssl, user token?
 - admin and user roles
     - admin func
-- validatrion and boundareis of all inputs
-    - password, username
-    - sugar settings and inputs, units change
-- caching, get user setting only?
+- validation and boundaries of all inputs
+    - password, username, email
 - different languages
-- scheduled reports
-- import save files
-- tests (nexDoor), swaager
+- cookies vs cache
+- scheduled reports, import save files
+- tests (nexDoor), swagger
 - MILI_MOLS units
 !!! UI !!!
-- history sugar with colors if > or <
+- history sugar with colors if > or <, cache last n entries, scroll vs pages
 - styling, css
 - login page, retrieve password
     - register to home, add some back button
