@@ -2,6 +2,7 @@ package com.filipzyla.diabeticapp.ui.user;
 
 import com.filipzyla.diabeticapp.backend.models.User;
 import com.filipzyla.diabeticapp.backend.security.SecurityService;
+import com.filipzyla.diabeticapp.backend.service.MailService;
 import com.filipzyla.diabeticapp.backend.service.UserService;
 import com.filipzyla.diabeticapp.backend.utility.SugarDefaultSettings;
 import com.filipzyla.diabeticapp.backend.utility.Validators;
@@ -27,17 +28,17 @@ public class SettingsView extends VerticalLayout {
 
     private final User user;
 
-    public SettingsView(SecurityService securityService, UserService userService) {
+    public SettingsView(SecurityService securityService, UserService userService, MailService mailService) {
         user = userService.findByUsername(securityService.getAuthenticatedUser());
 
         HorizontalLayout mainSettingsLayout = new HorizontalLayout();
-        mainSettingsLayout.add(credentialsLayout(userService, securityService), settingsLayout(userService));
+        mainSettingsLayout.add(credentialsLayout(userService, securityService, mailService), settingsLayout(userService));
 
         setAlignItems(Alignment.CENTER);
         add(new TopMenuBar(securityService), new H2("Settings"), mainSettingsLayout);
     }
 
-    private VerticalLayout credentialsLayout(UserService userService, SecurityService securityService) {
+    private VerticalLayout credentialsLayout(UserService userService, SecurityService securityService, MailService mailService) {
         TextField username = new TextField("Username");
         username.setValue(user.getUsername());
         PasswordField password = new PasswordField("Password");
@@ -69,7 +70,8 @@ public class SettingsView extends VerticalLayout {
                 userService.saveUser(user);
                 rePassword.setValue("");
                 reEmail.setValue("");
-                Notification.show("Changes saved!").setPosition(Notification.Position.MIDDLE);
+                mailService.changeCredentials(user);
+                Notification.show("Changes saved, confirmation send to your email!").setPosition(Notification.Position.MIDDLE);
             }
         });
 

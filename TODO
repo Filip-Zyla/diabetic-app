@@ -1,7 +1,4 @@
-- TODO's
 !!! Functionality !!!
-- users
-    - forgot password email valid for 1 day, register confirm by email
 - security
     - password encryption, ssl, user token?
 - admin and user roles
@@ -11,12 +8,14 @@
 - different languages
 - cookies vs cache
 - scheduled reports, import save files
-- tests (nexDoor), swagger
+- tests (nexDoor), swagger, logs
 - MILI_MOLS units
+- email html
 !!! UI !!!
 - history sugar with colors if > or <, cache last n entries, scroll vs pages
+- wrap notes on main page
 - styling, css
-- login page, retrieve password
+- login page, retrieve/forgot password
     - register to home, add some back button
 - graphs, charts, show sugar boundaries
 - admin views

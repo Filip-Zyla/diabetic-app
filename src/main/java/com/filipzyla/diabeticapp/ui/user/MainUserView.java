@@ -61,7 +61,6 @@ public class MainUserView extends VerticalLayout {
             H5 labelSugar = new H5(sugarOpt.get().getSugar() + " " + userUnits.getMsg());
             H5 labelTypeSug = new H5(sugarOpt.get().getType().getMsg());
             H5 labelTimeSug = new H5(sugarOpt.get().getTime().format(CustomDateTimeFormatter.formatter));
-            //TODO wrap note
             Label labelNote = new Label(sugarOpt.get().getNote());
             layoutLastSugar.add(labelSugarMain, labelSugar, labelTypeSug, labelTimeSug, labelNote);
         }

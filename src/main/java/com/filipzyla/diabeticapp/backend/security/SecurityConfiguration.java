@@ -13,7 +13,6 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     private final CustomAuthenticationProvider provider;
 
-    private static final String LOGIN_PROCESSING_URL = "/login";
     private static final String LOGIN_FAILURE_URL = "/login?error";
     private static final String LOGIN_URL = "/login";
     private static final String LOGOUT_SUCCESS_URL = "/login";
@@ -34,7 +33,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .and()
                 .formLogin().loginPage(LOGIN_URL).permitAll()
                 .successForwardUrl(LOGIN_SUCCESS)
-                .loginProcessingUrl(LOGIN_PROCESSING_URL)
+                .loginProcessingUrl(LOGIN_URL)
                 .defaultSuccessUrl(LOGIN_SUCCESS)
                 .failureUrl(LOGIN_FAILURE_URL)
                 .and().logout().logoutSuccessUrl(LOGOUT_SUCCESS_URL);
@@ -44,8 +43,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     protected void configure(AuthenticationManagerBuilder auth) {
         auth.authenticationProvider(provider);
     }
-
-
+    
     @Override
     public void configure(WebSecurity web) {
         web.ignoring().antMatchers(

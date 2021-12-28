@@ -15,6 +15,7 @@ import java.util.Optional;
 public class UserService {
 
     private final UserRepository userRepository;
+    private final MailService mailService;
 
     @CachePut("user")
     public void saveUser(User user) {
@@ -42,11 +43,17 @@ public class UserService {
 
     public boolean registerUser(String email, String username, String pass) {
         User user = new User(username, pass, email);
+        mailService.registerEmail(user);
         userRepository.save(user);
         return true;
     }
 
     public void deleteUser(User user) {
         userRepository.delete(user);
+    }
+
+    public void forgotPassword(String email) {
+        Optional<User> userOpt = userRepository.findByEmail(email);
+        userOpt.ifPresent(mailService::forgotPassword);
     }
 }

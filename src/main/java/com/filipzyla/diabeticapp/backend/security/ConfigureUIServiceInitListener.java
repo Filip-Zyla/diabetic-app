@@ -1,5 +1,6 @@
 package com.filipzyla.diabeticapp.backend.security;
 
+import com.filipzyla.diabeticapp.ui.login.ForgotPasswordView;
 import com.filipzyla.diabeticapp.ui.login.LoginView;
 import com.filipzyla.diabeticapp.ui.login.RegisterView;
 import com.vaadin.flow.component.UI;
@@ -22,6 +23,9 @@ public class ConfigureUIServiceInitListener implements VaadinServiceInitListener
     private void beforeEnter(BeforeEnterEvent event) {
         if (RegisterView.class.equals(event.getNavigationTarget()) && !SecurityUtils.isUserLoggedIn()) {
             event.rerouteTo(RegisterView.class);
+        }
+        else if (ForgotPasswordView.class.equals(event.getNavigationTarget()) && !SecurityUtils.isUserLoggedIn()) {
+            event.rerouteTo(ForgotPasswordView.class);
         }
         else if (!LoginView.class.equals(event.getNavigationTarget())
                 && !SecurityUtils.isUserLoggedIn()) {

@@ -3,6 +3,7 @@ package com.filipzyla.diabeticapp.ui.login;
 import com.filipzyla.diabeticapp.backend.service.UserService;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.Composite;
+import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.html.H2;
 import com.vaadin.flow.component.notification.Notification;
@@ -29,7 +30,7 @@ public class RegisterView extends Composite {
         PasswordField password1 = new PasswordField("Password");
         PasswordField password2 = new PasswordField("Confirm password");
         VerticalLayout layout = new VerticalLayout();
-        layout.add(new H2("Register"), email, username, password1, password2,
+        layout.add(new Button("Home", e -> UI.getCurrent().navigate("login")), new H2("Register"), email, username, password1, password2,
                 new Button("Create user", event -> {
                     register(
                             username.getValue(),
