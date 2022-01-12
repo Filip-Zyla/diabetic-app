@@ -1,5 +1,7 @@
 package com.filipzyla.diabeticapp.backend.utility;
 
+import org.apache.commons.validator.routines.EmailValidator;
+
 public class Validators {
     public static final Integer MAX_SUGAR = 500;
     public static final Integer MIN_SUGAR = 30;
@@ -12,5 +14,17 @@ public class Validators {
 
     public static boolean validateInsulin(Integer insulin) {
         return insulin >= MIN_INSULIN && insulin <= MAX_INSULIN;
+    }
+
+    public static boolean validateEmail(String email) {
+        return EmailValidator.getInstance().isValid(email);
+    }
+
+    public static boolean validatePassword(String password) {
+        return true;
+    }
+
+    public static boolean validateUsername(String username) {
+        return true;
     }
 }

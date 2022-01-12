@@ -1,21 +1,19 @@
 !!! Functionality !!!
-- security
-    - password encryption, ssl, user token?
 - admin and user roles
     - admin func
-- validation and boundaries of all inputs
-    - password, username, email
+- validator
 - different languages
 - cookies vs cache
 - scheduled reports, import save files
 - tests (nexDoor), swagger, logs
-- MILI_MOLS units
 - email html
 !!! UI !!!
+- change credentials!!!
 - history sugar with colors if > or <, cache last n entries, scroll vs pages
 - wrap notes on main page
 - styling, css
 - login page, retrieve/forgot password
     - register to home, add some back button
+    - default view, prohibited views
 - graphs, charts, show sugar boundaries
 - admin views

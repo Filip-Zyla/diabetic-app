@@ -42,7 +42,6 @@ public class SettingsView extends VerticalLayout {
         TextField username = new TextField("Username");
         username.setValue(user.getUsername());
         PasswordField password = new PasswordField("Password");
-        password.setValue(user.getPassword());
         PasswordField rePassword = new PasswordField("Confirm password");
         EmailField email = new EmailField("Email");
         email.setValue(user.getEmail());
@@ -63,14 +62,18 @@ public class SettingsView extends VerticalLayout {
             else if (!password.getValue().equals(user.getPassword()) && !password.getValue().equals(rePassword.getValue())) {
                 Notification.show("Passwords don't match!").setPosition(Notification.Position.MIDDLE);
             }
+            else if (password.getValue().isEmpty()) {
+                Notification.show("Wrong passwords!").setPosition(Notification.Position.MIDDLE);
+            }
             else {
                 user.setUsername(username.getValue());
                 user.setPassword(password.getValue());
                 user.setEmail(email.getValue());
+                mailService.changeCredentials(user);
                 userService.saveUser(user);
+                password.setValue("");
                 rePassword.setValue("");
                 reEmail.setValue("");
-                mailService.changeCredentials(user);
                 Notification.show("Changes saved, confirmation send to your email!").setPosition(Notification.Position.MIDDLE);
             }
         });

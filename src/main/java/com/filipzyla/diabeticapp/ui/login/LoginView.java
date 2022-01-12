@@ -25,8 +25,7 @@ public class LoginView extends VerticalLayout implements BeforeEnterObserver {
         layout.setAlignItems(Alignment.START);
 
         setAlignItems(Alignment.CENTER);
-        add(new H2("Welcome to my app"), loginForm, layout);
-
+        add(new H2("Welcome to DiabApp"), loginForm, layout);
     }
 
     @Override

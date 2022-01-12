@@ -30,7 +30,8 @@ public class RegisterView extends Composite {
         PasswordField password1 = new PasswordField("Password");
         PasswordField password2 = new PasswordField("Confirm password");
         VerticalLayout layout = new VerticalLayout();
-        layout.add(new Button("Home", e -> UI.getCurrent().navigate("login")), new H2("Register"), email, username, password1, password2,
+        layout.add(new Button("Home", e -> UI.getCurrent().navigate("login")),
+                new H2("Register"), email, username, password1, password2,
                 new Button("Create user", event -> {
                     register(
                             username.getValue(),
@@ -44,23 +45,28 @@ public class RegisterView extends Composite {
     }
 
     private void register(String username, String email, String pass1, String pass2) {
-        if (username.trim().isEmpty())
+        if (username.trim().isEmpty()) {
             Notification.show("Enter a username").setPosition(Notification.Position.MIDDLE);
-        else if (pass1.isEmpty() || pass2.isEmpty())
+        }
+        else if (pass1.isEmpty() || pass2.isEmpty()) {
             Notification.show("Enter a password").setPosition(Notification.Position.MIDDLE);
-        else if (!pass1.equals(pass2))
+        }
+        else if (!pass1.equals(pass2)) {
             Notification.show("Passwords don't match").setPosition(Notification.Position.MIDDLE);
+        }
         else {
-            if (userService.validateEmail(email))
-                Notification.show("Use other email.").setPosition(Notification.Position.MIDDLE);
-            else if (userService.validateUsername(username))
-                Notification.show("User other username.").setPosition(Notification.Position.MIDDLE);
+            if (userService.validateEmail(email)) {
+                Notification.show("Use other email").setPosition(Notification.Position.MIDDLE);
+            }
+            else if (userService.validateUsername(username)) {
+                Notification.show("User other username").setPosition(Notification.Position.MIDDLE);
+            }
             else {
                 if (userService.registerUser(email, username, pass1)) {
-                    Notification.show("Check your email.").setPosition(Notification.Position.MIDDLE);
+                    Notification.show("Check your email").setPosition(Notification.Position.MIDDLE);
                 }
                 else {
-                    Notification.show("Something gone wrong, try again.").setPosition(Notification.Position.MIDDLE);
+                    Notification.show("Something gone wrong, try again").setPosition(Notification.Position.MIDDLE);
                 }
             }
         }

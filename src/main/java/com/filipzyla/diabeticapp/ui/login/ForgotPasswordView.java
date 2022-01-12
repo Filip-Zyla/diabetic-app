@@ -25,13 +25,15 @@ public class ForgotPasswordView extends Composite {
     @Override
     protected Component initContent() {
         VerticalLayout mainLayout = new VerticalLayout();
-
         EmailField emailField = new EmailField("Email");
         Button sendReminder = new Button("Send email", buttonClickEvent -> {
-            if (!emailField.isEmpty() && EmailValidator.getInstance().isValid(emailField.getValue())) {
-                userService.forgotPassword(emailField.getValue());
+            if (emailField.isEmpty() || !EmailValidator.getInstance().isValid(emailField.getValue())) {
+                Notification.show("Not valid email!").setPosition(Notification.Position.MIDDLE);
             }
-            Notification.show("Email with credentials sent!").setPosition(Notification.Position.MIDDLE);
+            else {
+                userService.forgotPassword(emailField.getValue());
+                Notification.show("Check your mailbox!").setPosition(Notification.Position.MIDDLE);
+            }
         });
         mainLayout.setAlignItems(FlexComponent.Alignment.CENTER);
         mainLayout.add(new Button("Home", e -> UI.getCurrent().navigate("login")), new H2("Forgot password"), emailField, sendReminder);

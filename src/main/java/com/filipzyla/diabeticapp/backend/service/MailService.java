@@ -26,13 +26,11 @@ public class MailService {
         javaMailSender.send(mimeMessage);
     }
 
+    private final String LIST_CREDENTIALS = "Your credentials:\n login - %s\n password - %s\n";
+
     public void registerEmail(User user) {
         String subject = "Confirm registration";
-        String text = "Your account has been created.\n" +
-                "Credentials:\n" +
-                "login - %s\n" +
-                "password - %s\n" +
-                "You can log in.";
+        String text = "Account has been created.\n" + LIST_CREDENTIALS;
         try {
             sendEmail(user.getEmail(), subject, String.format(text, user.getUsername(), user.getPassword()));
         } catch (MessagingException e) {
@@ -41,25 +39,18 @@ public class MailService {
     }
 
     public void forgotPassword(User user) {
-        String subject = "Forgotten credentials";
-        String text = "Your credentials:\n" +
-                "login - %s\n" +
-                "password - %s\n";
+        String subject = "New credentials";
         try {
-            sendEmail(user.getEmail(), subject, String.format(text, user.getUsername(), user.getPassword()));
+            sendEmail(user.getEmail(), subject, String.format(LIST_CREDENTIALS, user.getUsername(), user.getPassword()));
         } catch (MessagingException e) {
             e.printStackTrace();
         }
     }
 
     public void changeCredentials(User user) {
-        String subject = "New credentials";
-        String text = "Your credentials:\n" +
-                "login - %s\n" +
-                "password - %s\n" +
-                "email - %s\n";
+        String subject = "You changed credentials";
         try {
-            sendEmail(user.getEmail(), subject, String.format(text, user.getUsername(), user.getPassword(), user.getEmail()));
+            sendEmail(user.getEmail(), subject, String.format(LIST_CREDENTIALS, user.getUsername(), user.getPassword()));
         } catch (MessagingException e) {
             e.printStackTrace();
         }

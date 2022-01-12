@@ -46,7 +46,6 @@ public class AddMeasurementsView extends VerticalLayout {
 
         user = userService.findByUsername(securityService.getAuthenticatedUser());
 
-
         ComboBox<MeasurementType> comboBoxMeasurementType = new ComboBox("What do you want to add?");
         comboBoxMeasurementType.setItems(MeasurementType.values());
         comboBoxMeasurementType.setWidth("200px");
