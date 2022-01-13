@@ -159,8 +159,7 @@ public class HistoryView extends VerticalLayout {
                 refreshHistoryGrid();
             }
             else {
-                Notification.show("Values must be between " + Validators.MIN_SUGAR + " - " + Validators.MAX_SUGAR + "!")
-                        .setPosition(Notification.Position.MIDDLE);
+                Notification.show(Validators.WRONG_SUGAR_MSG).setPosition(Notification.Position.MIDDLE);
             }
         });
         Button buttonDelete = new Button("Delete", delete -> {
@@ -216,8 +215,7 @@ public class HistoryView extends VerticalLayout {
                 refreshHistoryGrid();
             }
             else {
-                Notification.show("Values must be between " + Validators.MIN_INSULIN + " - " + Validators.MAX_INSULIN + "!")
-                        .setPosition(Notification.Position.MIDDLE);
+                Notification.show(Validators.WRONG_INSULIN_MSG).setPosition(Notification.Position.MIDDLE);
             }
         });
         Button buttonDelete = new Button("Delete", delete -> {

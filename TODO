@@ -1,7 +1,6 @@
 !!! Functionality !!!
 - admin and user roles
     - admin func
-- validator
 - different languages
 - cookies vs cache
 - scheduled reports, import save files

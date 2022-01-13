@@ -70,7 +70,7 @@ public class SettingsView extends VerticalLayout {
                 user.setPassword(password.getValue());
                 user.setEmail(email.getValue());
                 mailService.changeCredentials(user);
-                userService.saveUser(user);
+                userService.saveUser(user, true);
                 password.setValue("");
                 rePassword.setValue("");
                 reEmail.setValue("");
@@ -112,18 +112,17 @@ public class SettingsView extends VerticalLayout {
         hyperglycemiaAfterMeal.setStep(1);
 
         Button saveSugar = new Button("Save changes", event -> {
-            if (!Validators.validateSugar(hypoglycemia.getValue().intValue())
-                    || !Validators.validateSugar(hyperglycemia.getValue().intValue())
-                    || !Validators.validateSugar(hyperglycemiaAfterMeal.getValue().intValue())) {
-                Notification.show("Values must be between " + Validators.MIN_SUGAR + " - " + Validators.MAX_SUGAR + "!")
-                        .setPosition(Notification.Position.MIDDLE);
-            }
-            else {
+            if (Validators.validateSugar(hypoglycemia.getValue().intValue())
+                    && Validators.validateSugar(hyperglycemia.getValue().intValue())
+                    && Validators.validateSugar(hyperglycemiaAfterMeal.getValue().intValue())) {
                 user.setHypoglycemia(hypoglycemia.getValue());
                 user.setHyperglycemia(hyperglycemia.getValue());
                 user.setHyperglycemiaAfterMeal(hyperglycemiaAfterMeal.getValue());
-                userService.saveUser(user);
+                userService.saveUser(user, false);
                 Notification.show("Changes saved").setPosition(Notification.Position.MIDDLE);
+            }
+            else {
+                Notification.show(Validators.WRONG_SUGAR_MSG).setPosition(Notification.Position.MIDDLE);
             }
         });
 
@@ -134,7 +133,7 @@ public class SettingsView extends VerticalLayout {
             hypoglycemia.setValue(SugarDefaultSettings.DEFAULT_HYPOGLYCEMIA);
             hyperglycemia.setValue(SugarDefaultSettings.DEFAULT_HYPERGLYCEMIA);
             hyperglycemiaAfterMeal.setValue(SugarDefaultSettings.DEFAULT_HYPERGLYCEMIA_AFTER_MEAL);
-            userService.saveUser(user);
+            userService.saveUser(user, false);
             Notification.show("Default values set").setPosition(Notification.Position.MIDDLE);
         });
 

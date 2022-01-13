@@ -1,6 +1,7 @@
 package com.filipzyla.diabeticapp.ui.login;
 
 import com.filipzyla.diabeticapp.backend.service.UserService;
+import com.filipzyla.diabeticapp.backend.utility.Validators;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.Composite;
 import com.vaadin.flow.component.UI;
@@ -11,7 +12,6 @@ import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.EmailField;
 import com.vaadin.flow.router.Route;
-import org.apache.commons.validator.routines.EmailValidator;
 
 @Route("forgotPassword")
 public class ForgotPasswordView extends Composite {
@@ -27,12 +27,12 @@ public class ForgotPasswordView extends Composite {
         VerticalLayout mainLayout = new VerticalLayout();
         EmailField emailField = new EmailField("Email");
         Button sendReminder = new Button("Send email", buttonClickEvent -> {
-            if (emailField.isEmpty() || !EmailValidator.getInstance().isValid(emailField.getValue())) {
-                Notification.show("Not valid email!").setPosition(Notification.Position.MIDDLE);
+            if (Validators.validateEmail(emailField.getValue())) {
+                userService.forgotPassword(emailField.getValue());
+                Notification.show("Check your mailbox").setPosition(Notification.Position.MIDDLE);
             }
             else {
-                userService.forgotPassword(emailField.getValue());
-                Notification.show("Check your mailbox!").setPosition(Notification.Position.MIDDLE);
+                Notification.show(Validators.WRONG_EMAIL_MSG).setPosition(Notification.Position.MIDDLE);
             }
         });
         mainLayout.setAlignItems(FlexComponent.Alignment.CENTER);

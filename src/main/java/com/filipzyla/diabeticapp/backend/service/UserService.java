@@ -21,8 +21,10 @@ public class UserService {
     private final BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
 
     @CachePut("user")
-    public void saveUser(User user) {
-        user.setPassword(encoder.encode(user.getPassword()));
+    public void saveUser(User user, boolean encode) {
+        if (encode) {
+            user.setPassword(encoder.encode(user.getPassword()));
+        }
         userRepository.save(user);
     }
 
@@ -48,7 +50,7 @@ public class UserService {
     public boolean registerUser(String email, String username, String pass) {
         User user = new User(username, pass, email);
         mailService.registerEmail(user);
-        saveUser(user);
+        saveUser(user, true);
         return true;
     }
 
@@ -62,7 +64,7 @@ public class UserService {
             User user = userOpt.get();
             user.setPassword(RandomStringUtils.randomAlphabetic(15));
             mailService.forgotPassword(user);
-            saveUser(user);
+            saveUser(user, true);
         }
     }
 }

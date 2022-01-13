@@ -1,6 +1,7 @@
 package com.filipzyla.diabeticapp.ui.login;
 
 import com.filipzyla.diabeticapp.backend.service.UserService;
+import com.filipzyla.diabeticapp.backend.utility.Validators;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.Composite;
 import com.vaadin.flow.component.UI;
@@ -45,11 +46,14 @@ public class RegisterView extends Composite {
     }
 
     private void register(String username, String email, String pass1, String pass2) {
-        if (username.trim().isEmpty()) {
-            Notification.show("Enter a username").setPosition(Notification.Position.MIDDLE);
+        if (!Validators.validateEmail(email)) {
+            Notification.show(Validators.WRONG_EMAIL_MSG).setPosition(Notification.Position.MIDDLE);
         }
-        else if (pass1.isEmpty() || pass2.isEmpty()) {
-            Notification.show("Enter a password").setPosition(Notification.Position.MIDDLE);
+        else if (!Validators.validateUsername(username)) {
+            Notification.show(Validators.WRONG_USERNAME_MSG).setPosition(Notification.Position.MIDDLE);
+        }
+        else if (!Validators.validatePassword(pass1) || !Validators.validatePassword(pass2)) {
+            Notification.show(Validators.WRONG_PASSWORD_MSG).setPosition(Notification.Position.MIDDLE);
         }
         else if (!pass1.equals(pass2)) {
             Notification.show("Passwords don't match").setPosition(Notification.Position.MIDDLE);
