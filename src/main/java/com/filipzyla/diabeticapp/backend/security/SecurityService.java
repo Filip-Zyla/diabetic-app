@@ -2,6 +2,7 @@ package com.filipzyla.diabeticapp.backend.security;
 
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.server.VaadinServletRequest;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
@@ -23,6 +24,7 @@ public class SecurityService {
         }
     }
 
+    @CacheEvict(value = "user", allEntries = true)
     public void logout() {
         UI.getCurrent().getPage().setLocation(LOGOUT_SUCCESS_URL);
         SecurityContextLogoutHandler logoutHandler = new SecurityContextLogoutHandler();

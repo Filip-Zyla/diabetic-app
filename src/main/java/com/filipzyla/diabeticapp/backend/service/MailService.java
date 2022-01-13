@@ -55,4 +55,13 @@ public class MailService {
             e.printStackTrace();
         }
     }
+
+    public void changeEmail(User user) {
+        String subject = "Changed email";
+        try {
+            sendEmail(user.getEmail(), subject, "Now this is email for your account on DiabApp");
+        } catch (MessagingException e) {
+            e.printStackTrace();
+        }
+    }
 }

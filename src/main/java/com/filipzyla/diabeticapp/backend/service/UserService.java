@@ -62,9 +62,22 @@ public class UserService {
         Optional<User> userOpt = userRepository.findByEmail(email);
         if (userOpt.isPresent()) {
             User user = userOpt.get();
-            user.setPassword(RandomStringUtils.randomAlphabetic(15));
+            user.setPassword(RandomStringUtils.randomAlphanumeric(15));
             mailService.forgotPassword(user);
-            saveUser(user, true);
+            user.setPassword(encoder.encode(user.getPassword()));
+            userRepository.save(user);
         }
+    }
+
+    public void changePassword(User user, String password) {
+        user.setPassword(password);
+        mailService.changeCredentials(user);
+        saveUser(user, true);
+    }
+
+    public void changeEmail(User user, String email) {
+        user.setEmail(email);
+        mailService.changeEmail(user);
+        saveUser(user, false);
     }
 }
