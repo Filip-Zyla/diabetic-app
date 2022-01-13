@@ -5,7 +5,7 @@ import com.filipzyla.diabeticapp.backend.security.SecurityService;
 import com.filipzyla.diabeticapp.backend.service.UserService;
 import com.filipzyla.diabeticapp.backend.utility.SugarDefaultSettings;
 import com.filipzyla.diabeticapp.backend.utility.Validators;
-import com.filipzyla.diabeticapp.ui.components.TopMenuBar;
+import com.filipzyla.diabeticapp.ui.utility.TopMenuBar;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.dialog.Dialog;

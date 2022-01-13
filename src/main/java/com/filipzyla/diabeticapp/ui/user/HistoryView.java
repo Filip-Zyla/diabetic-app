@@ -12,7 +12,7 @@ import com.filipzyla.diabeticapp.backend.service.SugarService;
 import com.filipzyla.diabeticapp.backend.service.UserService;
 import com.filipzyla.diabeticapp.backend.utility.CustomDateTimeFormatter;
 import com.filipzyla.diabeticapp.backend.utility.Validators;
-import com.filipzyla.diabeticapp.ui.components.TopMenuBar;
+import com.filipzyla.diabeticapp.ui.utility.TopMenuBar;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.Unit;
 import com.vaadin.flow.component.button.Button;

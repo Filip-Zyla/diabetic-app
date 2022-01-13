@@ -2,16 +2,12 @@
 - admin and user roles
     - admin func
 - different languages
-- cookies vs cache
 - scheduled reports, import save files
+- cookies vs cache
 - tests (nexDoor), swagger, logs
 - email html
 !!! UI !!!
-- history sugar with colors if > or <, cache last n entries, scroll vs pages
-- wrap notes on main page
-- styling, css
-- login page, retrieve/forgot password
-    - register to home, add some back button
-    - default view, prohibited views
-- graphs, charts, show sugar boundaries
 - admin views
+- graphs, charts, history, sugar boundaries - colors, cache, scroll vs pages
+- styling
+- history to top bar, setting to tabs

@@ -9,13 +9,12 @@ import com.filipzyla.diabeticapp.backend.service.InsulinService;
 import com.filipzyla.diabeticapp.backend.service.SugarService;
 import com.filipzyla.diabeticapp.backend.service.UserService;
 import com.filipzyla.diabeticapp.backend.utility.CustomDateTimeFormatter;
-import com.filipzyla.diabeticapp.ui.components.TopMenuBar;
+import com.filipzyla.diabeticapp.ui.utility.TopMenuBar;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.html.H3;
 import com.vaadin.flow.component.html.H5;
-import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
@@ -37,8 +36,10 @@ public class MainUserView extends VerticalLayout {
         this.insulinService = insulinService;
 
         user = userService.findByUsername(securityService.getAuthenticatedUser());
+        final Button button = new Button("Add new", new Icon(VaadinIcon.PLUS), event -> UI.getCurrent().navigate("add"));
 
-        add(new TopMenuBar(securityService), addLastMeasurements(), lowerButtons());
+        setAlignItems(Alignment.CENTER);
+        add(new TopMenuBar(securityService), addLastMeasurements(), button);
     }
 
     private Component addLastMeasurements() {
@@ -61,8 +62,7 @@ public class MainUserView extends VerticalLayout {
             H5 labelSugar = new H5(sugarOpt.get().getSugar() + " " + userUnits.getMsg());
             H5 labelTypeSug = new H5(sugarOpt.get().getType().getMsg());
             H5 labelTimeSug = new H5(sugarOpt.get().getTime().format(CustomDateTimeFormatter.formatter));
-            Label labelNote = new Label(sugarOpt.get().getNote());
-            layoutLastSugar.add(labelSugarMain, labelSugar, labelTypeSug, labelTimeSug, labelNote);
+            layoutLastSugar.add(labelSugarMain, labelSugar, labelTypeSug, labelTimeSug);
         }
         return layoutLastSugar;
     }
@@ -78,22 +78,8 @@ public class MainUserView extends VerticalLayout {
             H5 labelInsulin = new H5(insulinOpt.get().getInsulin().toString() + " units");
             H5 labelTypeIns = new H5(insulinOpt.get().getType().getMsg());
             H5 labelTimeIns = new H5(insulinOpt.get().getTime().format(CustomDateTimeFormatter.formatter));
-            Label labelNote = new Label(insulinOpt.get().getNote());
-            layoutLastInsulin.add(labelInsulinMain, labelInsulin, labelTypeIns, labelTimeIns, labelNote);
+            layoutLastInsulin.add(labelInsulinMain, labelInsulin, labelTypeIns, labelTimeIns);
         }
         return layoutLastInsulin;
-    }
-
-    private Component lowerButtons() {
-        Button buttonAddNewMeasurement = new Button("Add new", new Icon(VaadinIcon.PLUS), event -> UI.getCurrent().navigate("add"));
-        Button buttonShowHistory = new Button("History", new Icon(VaadinIcon.ARCHIVE), event -> UI.getCurrent().navigate("history"));
-
-        HorizontalLayout layoutLowerButtons = new HorizontalLayout();
-        layoutLowerButtons.setWidthFull();
-        layoutLowerButtons.setJustifyContentMode(JustifyContentMode.CENTER);
-        layoutLowerButtons.setAlignSelf(Alignment.STRETCH);
-        layoutLowerButtons.add(buttonAddNewMeasurement, buttonShowHistory);
-
-        return layoutLowerButtons;
     }
 }

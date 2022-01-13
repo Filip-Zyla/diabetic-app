@@ -1,4 +1,4 @@
-package com.filipzyla.diabeticapp.ui.components;
+package com.filipzyla.diabeticapp.ui.utility;
 
 import com.filipzyla.diabeticapp.backend.security.SecurityService;
 import com.vaadin.flow.component.UI;
@@ -13,6 +13,7 @@ public class TopMenuBar extends HorizontalLayout {
 
     public TopMenuBar(SecurityService securityService) {
         Button buttonHomePage = new Button("Home", new Icon(VaadinIcon.HOME), event -> UI.getCurrent().navigate("home"));
+        Button buttonHistory = new Button("History", new Icon(VaadinIcon.ARCHIVE), event -> UI.getCurrent().navigate("history"));
         Button buttonSetting = new Button("Settings", new Icon(VaadinIcon.OPTIONS), event -> UI.getCurrent().navigate("settings"));
         Button buttonLogout = new Button("Logout", new Icon(VaadinIcon.EXIT), event -> securityService.logout());
 
@@ -21,6 +22,6 @@ public class TopMenuBar extends HorizontalLayout {
         setJustifyContentMode(FlexComponent.JustifyContentMode.CENTER);
         setAlignSelf(FlexComponent.Alignment.STRETCH);
 
-        add(buttonHomePage, buttonSetting, buttonLogout);
+        add(buttonHomePage, buttonHistory, buttonSetting, buttonLogout);
     }
 }
