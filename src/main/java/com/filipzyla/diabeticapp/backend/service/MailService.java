@@ -7,14 +7,17 @@ import org.springframework.stereotype.Service;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
+import java.util.ResourceBundle;
 
 @Service
 public class MailService {
 
     private final JavaMailSender javaMailSender;
+    public ResourceBundle langResources;
 
     public MailService(JavaMailSender javaMailSender) {
         this.javaMailSender = javaMailSender;
+        langResources = ResourceBundle.getBundle("lang.res");
     }
 
     private void sendEmail(String toEmail, String subject, String text) throws MessagingException {
@@ -26,42 +29,45 @@ public class MailService {
         javaMailSender.send(mimeMessage);
     }
 
-    private final String LIST_CREDENTIALS = "Your credentials:\n login - %s\n password - %s\n";
-
     public void registerEmail(User user) {
-        String subject = "Confirm registration";
-        String text = "Account has been created.\n" + LIST_CREDENTIALS;
-        try {
-            sendEmail(user.getEmail(), subject, String.format(text, user.getUsername(), user.getPassword()));
-        } catch (MessagingException e) {
-            e.printStackTrace();
-        }
+        refresh();
+        String subject = langResources.getString("new_acc");
+        sendCredentials(user, subject);
     }
 
     public void forgotPassword(User user) {
-        String subject = "New credentials";
-        try {
-            sendEmail(user.getEmail(), subject, String.format(LIST_CREDENTIALS, user.getUsername(), user.getPassword()));
-        } catch (MessagingException e) {
-            e.printStackTrace();
-        }
+        refresh();
+        String subject = langResources.getString("new_cred");
+        sendCredentials(user, subject);
     }
 
     public void changeCredentials(User user) {
-        String subject = "You changed credentials";
+        refresh();
+        String subject = langResources.getString("change_cred");
+        sendCredentials(user, subject);
+    }
+
+    private void sendCredentials(User user, String subject) {
         try {
-            sendEmail(user.getEmail(), subject, String.format(LIST_CREDENTIALS, user.getUsername(), user.getPassword()));
+            String listCredentials = langResources.getString("list_cred");
+            sendEmail(user.getEmail(), subject, String.format(listCredentials, user.getUsername(), user.getPassword()));
         } catch (MessagingException e) {
             e.printStackTrace();
         }
     }
 
     public void changeEmail(User user) {
-        String subject = "Changed email";
+        refresh();
+        String subject = langResources.getString("change_email");
+        String text = langResources.getString("change_email_text");
         try {
-            sendEmail(user.getEmail(), subject, "Now this is email for your account on DiabApp");
+            sendEmail(user.getEmail(), subject, text);
         } catch (MessagingException e) {
             e.printStackTrace();
         }
+    }
+
+    private void refresh() {
+        langResources = ResourceBundle.getBundle("lang.res");
     }
 }

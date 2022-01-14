@@ -1,13 +1,8 @@
-!!! Functionality !!!
 - admin and user roles
-    - admin func
-- different languages
+    - admin func/views
 - scheduled reports, import save files
-- cookies vs cache
-- tests (nexDoor), swagger, logs
-- email html
-!!! UI !!!
-- admin views
-- graphs, charts, history, sugar boundaries - colors, cache, scroll vs pages
-- styling
 - history to top bar, setting to tabs
+- graphs, charts, history, sugar boundaries - colors, cache, scroll vs pages
+- cookies vs cache
+- styling
+- tests (nexDoor), swagger, logs

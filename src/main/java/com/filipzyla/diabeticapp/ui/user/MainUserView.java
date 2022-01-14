@@ -22,6 +22,7 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.Route;
 
 import java.util.Optional;
+import java.util.ResourceBundle;
 
 @Route("home")
 public class MainUserView extends VerticalLayout {
@@ -31,12 +32,16 @@ public class MainUserView extends VerticalLayout {
 
     private final User user;
 
+    public final ResourceBundle langResources;
+
     public MainUserView(SugarService sugarService, InsulinService insulinService, SecurityService securityService, UserService userService) {
         this.sugarService = sugarService;
         this.insulinService = insulinService;
 
         user = userService.findByUsername(securityService.getAuthenticatedUser());
-        final Button button = new Button("Add new", new Icon(VaadinIcon.PLUS), event -> UI.getCurrent().navigate("add"));
+        langResources = ResourceBundle.getBundle("lang.res");
+
+        final Button button = new Button(langResources.getString("add_new"), new Icon(VaadinIcon.PLUS), event -> UI.getCurrent().navigate("add"));
 
         setAlignItems(Alignment.CENTER);
         add(new TopMenuBar(securityService), addLastMeasurements(), button);
@@ -58,9 +63,9 @@ public class MainUserView extends VerticalLayout {
         if (sugarOpt.isPresent()) {
             SugarUnits userUnits = user.getUnits();
 
-            H3 labelSugarMain = new H3("Last sugar");
+            H3 labelSugarMain = new H3(langResources.getString("last_sugar"));
             H5 labelSugar = new H5(sugarOpt.get().getSugar() + " " + userUnits.getMsg());
-            H5 labelTypeSug = new H5(sugarOpt.get().getType().getMsg());
+            H5 labelTypeSug = new H5(langResources.getString(sugarOpt.get().getType().getMsg()));
             H5 labelTimeSug = new H5(sugarOpt.get().getTime().format(CustomDateTimeFormatter.formatter));
             layoutLastSugar.add(labelSugarMain, labelSugar, labelTypeSug, labelTimeSug);
         }
@@ -74,9 +79,9 @@ public class MainUserView extends VerticalLayout {
 
         Optional<Insulin> insulinOpt = Optional.ofNullable(insulinService.findFirstByOrderByTimeAsc(user.getUserId()));
         if (insulinOpt.isPresent()) {
-            H3 labelInsulinMain = new H3("Last insulin");
-            H5 labelInsulin = new H5(insulinOpt.get().getInsulin().toString() + " units");
-            H5 labelTypeIns = new H5(insulinOpt.get().getType().getMsg());
+            H3 labelInsulinMain = new H3(langResources.getString("last_insulin"));
+            H5 labelInsulin = new H5(insulinOpt.get().getInsulin().toString() + " " + langResources.getString("units").toLowerCase());
+            H5 labelTypeIns = new H5(langResources.getString(insulinOpt.get().getType().getMsg()));
             H5 labelTimeIns = new H5(insulinOpt.get().getTime().format(CustomDateTimeFormatter.formatter));
             layoutLastInsulin.add(labelInsulinMain, labelInsulin, labelTypeIns, labelTimeIns);
         }

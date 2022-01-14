@@ -38,6 +38,7 @@ import java.time.Duration;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
+import java.util.ResourceBundle;
 
 @Route("history")
 public class HistoryView extends VerticalLayout {
@@ -51,23 +52,26 @@ public class HistoryView extends VerticalLayout {
     private final VerticalLayout layoutInsulin = new VerticalLayout();
     private DatePicker datePickerFrom, datePickerTo;
 
+    public final ResourceBundle langResources;
+
     public HistoryView(SugarService sugarService, InsulinService insulinService, SecurityService securityService, UserService userService) {
         this.sugarService = sugarService;
         this.insulinService = insulinService;
 
         user = userService.findByUsername(securityService.getAuthenticatedUser());
+        langResources = ResourceBundle.getBundle("lang.res");
 
-        Button buttonShowHistory = new Button("Show", event -> refreshHistoryGrid());
+        Button buttonShowHistory = new Button(langResources.getString("show"), event -> refreshHistoryGrid());
         setAlignItems(Alignment.CENTER);
 
-        add(new TopMenuBar(securityService), new H2("History"), datePeriodSelector(), buttonShowHistory, historyGrid());
+        add(new TopMenuBar(securityService), new H2(langResources.getString("history")), datePeriodSelector(), buttonShowHistory, historyGrid());
     }
 
     private Component datePeriodSelector() {
         HorizontalLayout layoutDatePeriod = new HorizontalLayout();
-        datePickerFrom = new DatePicker("From");
+        datePickerFrom = new DatePicker(langResources.getString("from"));
         datePickerFrom.setValue(LocalDate.now().minusDays(14));
-        datePickerTo = new DatePicker("To");
+        datePickerTo = new DatePicker(langResources.getString("to"));
         datePickerTo.setValue(LocalDate.now());
         layoutDatePeriod.add(datePickerFrom, datePickerTo);
         return layoutDatePeriod;
@@ -81,14 +85,14 @@ public class HistoryView extends VerticalLayout {
 
     private Component sugarGrid() {
         Grid<Sugar> gridSugar = new Grid(Sugar.class, false);
-        gridSugar.addColumn(sugar -> sugar.getSugar() + " " + sugar.getUnits().getMsg()).setHeader("Sugar");
-        gridSugar.addColumn(sugar -> sugar.getType().getMsg()).setHeader("Type");
-        gridSugar.addColumn(sugar -> sugar.getTime().format(CustomDateTimeFormatter.formatter)).setHeader("Time");
+        gridSugar.addColumn(sugar -> sugar.getSugar() + " " + sugar.getUnits().getMsg()).setHeader(langResources.getString("sugar"));
+        gridSugar.addColumn(sugar -> langResources.getString(sugar.getType().getMsg())).setHeader(langResources.getString("type"));
+        gridSugar.addColumn(sugar -> sugar.getTime().format(CustomDateTimeFormatter.formatter)).setHeader(langResources.getString("time"));
         gridSugar.addColumn(
                 new ComponentRenderer<>(Button::new, (button, sugar) -> {
                     button.addClickListener(e -> modifySugar(sugar));
                     button.setIcon(new Icon(VaadinIcon.MENU));
-                })).setHeader("Modify");
+                })).setHeader(langResources.getString("modify"));
 
 
         Optional<List<Sugar>> sugarOpt = Optional.ofNullable(sugarService.findAllOrderByTimeBetweenDates(user.getUserId(), datePickerFrom.getValue(), datePickerTo.getValue().plusDays(1)));
@@ -97,27 +101,27 @@ public class HistoryView extends VerticalLayout {
         gridSugar.setWidth(700, Unit.PIXELS);
         gridSugar.setHeight(500, Unit.PIXELS);
         layoutSugar.setAlignItems(Alignment.CENTER);
-        layoutSugar.add(new H4("Sugar"), gridSugar);
+        layoutSugar.add(new H4(langResources.getString("sugar")), gridSugar);
         return layoutSugar;
     }
 
     private Component insulinGrid() {
         Grid<Insulin> gridInsulin = new Grid(Insulin.class, false);
-        gridInsulin.addColumn(Insulin::getInsulin).setHeader("Units");
-        gridInsulin.addColumn(insulin -> insulin.getType().getMsg()).setHeader("Type");
-        gridInsulin.addColumn(insulin -> insulin.getTime().format(CustomDateTimeFormatter.formatter)).setHeader("Time");
+        gridInsulin.addColumn(Insulin::getInsulin).setHeader(langResources.getString("units"));
+        gridInsulin.addColumn(insulin -> langResources.getString(insulin.getType().getMsg())).setHeader(langResources.getString("type"));
+        gridInsulin.addColumn(insulin -> insulin.getTime().format(CustomDateTimeFormatter.formatter)).setHeader(langResources.getString("time"));
         gridInsulin.addColumn(
                 new ComponentRenderer<>(Button::new, (button, insulin) -> {
                     button.addClickListener(e -> modifyInsulin(insulin));
                     button.setIcon(new Icon(VaadinIcon.MENU));
-                })).setHeader("Modify");
+                })).setHeader(langResources.getString("modify"));
 
         Optional<List<Insulin>> sugarOpt = Optional.ofNullable(insulinService.findAllOrderByTimeBetweenDates(user.getUserId(), datePickerFrom.getValue(), datePickerTo.getValue().plusDays(1)));
         sugarOpt.ifPresent(gridInsulin::setItems);
         gridInsulin.setWidth(700, Unit.PIXELS);
         gridInsulin.setHeight(500, Unit.PIXELS);
         layoutInsulin.setAlignItems(Alignment.CENTER);
-        layoutInsulin.add(new H4("Insulin"), gridInsulin);
+        layoutInsulin.add(new H4(langResources.getString("insulin")), gridInsulin);
         return layoutInsulin;
     }
 
@@ -125,14 +129,14 @@ public class HistoryView extends VerticalLayout {
         Dialog dialog = new Dialog();
         dialog.open();
 
-        NumberField numField = new NumberField("Sugar");
+        NumberField numField = new NumberField(langResources.getString("sugar"));
         numField.setStep(1);
-        ComboBox<SugarType> comboBoxType = new ComboBox("Type");
+        ComboBox<SugarType> comboBoxType = new ComboBox(langResources.getString("type"));
         comboBoxType.setItems(SugarType.values());
-        comboBoxType.setItemLabelGenerator(SugarType::getMsg);
-        DateTimePicker dateTimePicker = new DateTimePicker("Time");
+        comboBoxType.setItemLabelGenerator(sugarType -> langResources.getString(sugarType.getMsg()));
+        DateTimePicker dateTimePicker = new DateTimePicker(langResources.getString("time"));
         dateTimePicker.setStep(Duration.ofMinutes(1));
-        TextArea textAreaNote = new TextArea("Note");
+        TextArea textAreaNote = new TextArea(langResources.getString("note"));
         textAreaNote.setWidth(300, Unit.PIXELS);
         textAreaNote.setMaxLength(255);
         textAreaNote.setValueChangeMode(ValueChangeMode.EAGER);
@@ -148,7 +152,7 @@ public class HistoryView extends VerticalLayout {
         VerticalLayout dialogLayout = new VerticalLayout();
         dialogLayout.add(numField, comboBoxType, dateTimePicker, textAreaNote);
 
-        Button buttonCommit = new Button("Save", save -> {
+        Button buttonCommit = new Button(langResources.getString("save"), save -> {
             if (Validators.validateSugar(numField.getValue().intValue())) {
                 sugar.setSugar(numField.getValue().intValue());
                 sugar.setType(comboBoxType.getValue());
@@ -159,15 +163,15 @@ public class HistoryView extends VerticalLayout {
                 refreshHistoryGrid();
             }
             else {
-                Notification.show(Validators.WRONG_SUGAR_MSG).setPosition(Notification.Position.MIDDLE);
+                Notification.show(langResources.getString("values_between") + Validators.SUGAR_RANGE).setPosition(Notification.Position.MIDDLE);
             }
         });
-        Button buttonDelete = new Button("Delete", delete -> {
+        Button buttonDelete = new Button(langResources.getString("delete"), delete -> {
             sugarService.delete(sugar);
             dialog.close();
             refreshHistoryGrid();
         });
-        Button buttonClose = new Button("Close", close -> {
+        Button buttonClose = new Button(langResources.getString("close"), close -> {
             dialog.close();
         });
         HorizontalLayout buttonLayout = new HorizontalLayout(buttonCommit, buttonDelete, buttonClose);
@@ -181,14 +185,14 @@ public class HistoryView extends VerticalLayout {
         Dialog dialog = new Dialog();
         dialog.open();
 
-        NumberField numField = new NumberField("Insulin");
+        NumberField numField = new NumberField(langResources.getString("insulin"));
         numField.setStep(1);
-        ComboBox<InsulinType> comboBox = new ComboBox("Type");
+        ComboBox<InsulinType> comboBox = new ComboBox(langResources.getString("type"));
         comboBox.setItems(InsulinType.values());
-        comboBox.setItemLabelGenerator(InsulinType::getMsg);
-        DateTimePicker dateTimePicker = new DateTimePicker("Time");
+        comboBox.setItemLabelGenerator(insulinType -> langResources.getString(insulinType.getMsg()));
+        DateTimePicker dateTimePicker = new DateTimePicker(langResources.getString("time"));
         dateTimePicker.setStep(Duration.ofMinutes(1));
-        TextArea textAreaNote = new TextArea("Note");
+        TextArea textAreaNote = new TextArea(langResources.getString("note"));
         textAreaNote.setWidth(300, Unit.PIXELS);
         textAreaNote.setMaxLength(255);
         textAreaNote.setValueChangeMode(ValueChangeMode.EAGER);
@@ -204,7 +208,7 @@ public class HistoryView extends VerticalLayout {
         VerticalLayout dialogLayout = new VerticalLayout();
         dialogLayout.add(numField, comboBox, dateTimePicker, textAreaNote);
 
-        Button buttonCommit = new Button("Save", save -> {
+        Button buttonCommit = new Button(langResources.getString("save"), save -> {
             if (Validators.validateInsulin(numField.getValue().intValue())) {
                 insulin.setInsulin(numField.getValue().intValue());
                 insulin.setType(comboBox.getValue());
@@ -215,15 +219,15 @@ public class HistoryView extends VerticalLayout {
                 refreshHistoryGrid();
             }
             else {
-                Notification.show(Validators.WRONG_INSULIN_MSG).setPosition(Notification.Position.MIDDLE);
+                Notification.show(langResources.getString("values_between") + Validators.INSULIN_RANGE).setPosition(Notification.Position.MIDDLE);
             }
         });
-        Button buttonDelete = new Button("Delete", delete -> {
+        Button buttonDelete = new Button(langResources.getString("delete"), delete -> {
             insulinService.delete(insulin);
             dialog.close();
             refreshHistoryGrid();
         });
-        Button buttonClose = new Button("Close", close -> {
+        Button buttonClose = new Button(langResources.getString("close"), close -> {
             dialog.close();
         });
         HorizontalLayout buttonLayout = new HorizontalLayout(buttonCommit, buttonDelete, buttonClose);
