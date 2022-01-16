@@ -37,6 +37,7 @@ import com.vaadin.flow.router.Route;
 import java.time.Duration;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Locale;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
@@ -70,9 +71,13 @@ public class HistoryView extends VerticalLayout {
     private Component datePeriodSelector() {
         HorizontalLayout layoutDatePeriod = new HorizontalLayout();
         datePickerFrom = new DatePicker(langResources.getString("from"));
+        datePickerFrom.setLocale(new Locale("pl", "PL"));
         datePickerFrom.setValue(LocalDate.now().minusDays(14));
+
         datePickerTo = new DatePicker(langResources.getString("to"));
+        datePickerTo.setLocale(new Locale("pl", "PL"));
         datePickerTo.setValue(LocalDate.now());
+
         layoutDatePeriod.add(datePickerFrom, datePickerTo);
         return layoutDatePeriod;
     }
@@ -135,6 +140,7 @@ public class HistoryView extends VerticalLayout {
         comboBoxType.setItems(SugarType.values());
         comboBoxType.setItemLabelGenerator(sugarType -> langResources.getString(sugarType.getMsg()));
         DateTimePicker dateTimePicker = new DateTimePicker(langResources.getString("time"));
+        dateTimePicker.setLocale(new Locale("pl", "PL"));
         dateTimePicker.setStep(Duration.ofMinutes(1));
         TextArea textAreaNote = new TextArea(langResources.getString("note"));
         textAreaNote.setWidth(300, Unit.PIXELS);
@@ -191,6 +197,7 @@ public class HistoryView extends VerticalLayout {
         comboBox.setItems(InsulinType.values());
         comboBox.setItemLabelGenerator(insulinType -> langResources.getString(insulinType.getMsg()));
         DateTimePicker dateTimePicker = new DateTimePicker(langResources.getString("time"));
+        dateTimePicker.setLocale(new Locale("pl", "PL"));
         dateTimePicker.setStep(Duration.ofMinutes(1));
         TextArea textAreaNote = new TextArea(langResources.getString("note"));
         textAreaNote.setWidth(300, Unit.PIXELS);

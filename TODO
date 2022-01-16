@@ -1,7 +1,4 @@
-- admin and user roles
-    - admin func/views
 - scheduled reports, import save files
-- history to top bar, setting to tabs
 - graphs, charts, history, sugar boundaries - colors, cache, scroll vs pages
 - cookies vs cache
 - styling
