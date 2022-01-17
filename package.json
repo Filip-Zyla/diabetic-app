@@ -10,7 +10,7 @@
   ],
   "author": "filip-zyla",
   "engines": {
-    "node": "14.18.0"
+    "node": "v14.18.0"
   },
   "license": "UNLICENSED",
   "dependencies": {

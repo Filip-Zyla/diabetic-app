@@ -106,8 +106,14 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-mail</artifactId>
-            <version>2.6.1</version>
+            <version>2.6.2</version>
         </dependency>
+        <dependency>
+            <groupId>com.github.eirslett</groupId>
+            <artifactId>frontend-maven-plugin</artifactId>
+            <version>1.12.1</version>
+        </dependency>
+
     </dependencies>
 
     <dependencyManagement>
@@ -157,6 +163,23 @@
                         </goals>
                     </execution>
                 </executions>
+            </plugin>
+            <plugin>
+                <groupId>com.github.eirslett</groupId>
+                <artifactId>frontend-maven-plugin</artifactId>
+                <version>1.8.0</version>
+                <executions>
+                    <execution>
+                        <id>install node and npm</id>
+                        <goals>
+                            <goal>install-node-and-npm</goal>
+                        </goals>
+                        <phase>generate-resources</phase>
+                    </execution>
+                </executions>
+                <configuration>
+                    <nodeVersion>v14.18.0</nodeVersion>
+                </configuration>
             </plugin>
         </plugins>
     </build>
