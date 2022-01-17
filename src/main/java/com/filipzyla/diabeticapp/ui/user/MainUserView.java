@@ -36,6 +36,7 @@ import java.util.Optional;
 import java.util.ResourceBundle;
 
 @Route("home")
+@org.springframework.stereotype.Component
 public class MainUserView extends VerticalLayout {
 
     private final SugarService sugarService;
