@@ -11,7 +11,7 @@
     </parent>
     <groupId>com.filip-zyla</groupId>
     <artifactId>diabetic-app</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>1.0.0</version>
     <name>diabetic-app</name>
     <description>diabetic-app</description>
 
@@ -44,7 +44,7 @@
                         <artifactId>spring-boot-maven-plugin</artifactId>
                         <configuration>
                             <mainClass>com.filipzyla.diabeticapp.DiabeticAppApplication</mainClass>
-                            <jvmArguments>-Dvaadin.productionMode</jvmArguments>
+                            <jvmArguments>-Pvaadin.productionMode</jvmArguments>
                         </configuration>
                     </plugin>
                 </plugins>
