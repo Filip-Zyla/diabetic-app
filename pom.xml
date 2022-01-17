@@ -164,8 +164,8 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <configuration>
+                    <jvmArguments>-Dvaadin.productionMode</jvmArguments>
                     <excludes>
-                        <jvmArguments>-Dvaadin.productionMode</jvmArguments>
                         <exclude>
                             <groupId>org.projectlombok</groupId>
                             <artifactId>lombok</artifactId>
