@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "This example is so cool.",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "stats": "webpack-bundle-analyzer dist/stats.json"
   },
   "keywords": [
     "heroku"
