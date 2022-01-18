@@ -43,7 +43,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     protected void configure(AuthenticationManagerBuilder auth) {
         auth.authenticationProvider(provider);
     }
-    
+
     @Override
     public void configure(WebSecurity web) {
         web.ignoring().antMatchers(

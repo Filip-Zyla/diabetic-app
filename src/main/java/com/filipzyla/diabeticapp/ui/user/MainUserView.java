@@ -27,6 +27,7 @@ import com.vaadin.flow.component.textfield.NumberField;
 import com.vaadin.flow.component.textfield.TextArea;
 import com.vaadin.flow.data.value.ValueChangeMode;
 import com.vaadin.flow.router.Route;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
@@ -48,6 +49,7 @@ public class MainUserView extends VerticalLayout {
     private final VerticalLayout sugarLayout;
     private final VerticalLayout insulinLayout;
 
+    @Autowired
     public MainUserView(SecurityService securityService, UserService userService, SugarService sugarService, InsulinService insulinService) {
         this.sugarService = sugarService;
         this.insulinService = insulinService;
