@@ -5,13 +5,13 @@ import com.filipzyla.diabeticapp.backend.enums.SugarUnits;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import lombok.ToString;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @NoArgsConstructor
-@ToString
 @Getter
 @Setter
 @Entity
@@ -26,7 +26,7 @@ public class Sugar {
     private Long id;
 
     @Column(nullable = false, scale = 1)
-    private Double sugar;
+    private Integer sugar;
 
     @Enumerated(EnumType.ORDINAL)
     @Column(nullable = false)
@@ -41,11 +41,17 @@ public class Sugar {
 
     private String note;
 
-    public Sugar(Double sugar, SugarType type, SugarUnits units, LocalDateTime time, String note) {
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "user_id", nullable = false)
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    private User user;
+
+    public Sugar(Integer sugar, SugarType type, LocalDateTime time, String note, User user) {
         this.sugar = sugar;
         this.type = type;
-        this.units = units;
+        units = SugarUnits.MILLI_GRAM;
         this.time = time;
         this.note = note;
+        this.user = user;
     }
 }

@@ -22,11 +22,11 @@ public class InsulinService {
         insulinRepository.delete(insulin);
     }
 
-    public Insulin findFirstByOrderByTimeAsc() {
-        return insulinRepository.findFirstByOrderByTimeAsc();
+    public Insulin findFirstByOrderByTimeAsc(Long userId) {
+        return insulinRepository.findFirstByOrderByTimeAsc(userId);
     }
 
-    public List<Insulin> findAllOrderByTimeBetweenDates(LocalDate from, LocalDate to) {
-        return insulinRepository.findAllOrderByTimeBetweenDates(from, to);
+    public List<Insulin> findAllOrderByTimeBetweenDates(Long userId, LocalDate from, LocalDate to) {
+        return insulinRepository.findAllOrderByTimeBetweenDates(userId, from, to);
     }
 }
