@@ -1,5 +1,7 @@
-- scheduled reports, import save files
+    - some methods to services, import transaction?
+- scheduled reports
 - graphs, charts, history, sugar boundaries - colors, cache, scroll vs pages
 - cookies vs cache
 - styling
 - tests (nexDoor), swagger, logs
+- heroku
