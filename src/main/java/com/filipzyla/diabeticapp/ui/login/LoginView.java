@@ -25,8 +25,8 @@ public class LoginView extends VerticalLayout implements BeforeEnterObserver {
         configLoginFrom();
 
         HorizontalLayout layout = new HorizontalLayout();
-        layout.add(new RouterLink(langResources.getString("register"), RegisterView.class),
-                new RouterLink(langResources.getString("forgot_pass"), ForgotPasswordView.class));
+        layout.add(new RouterLink(langResources.getString("register"), RegistrationView.class),
+                new RouterLink(langResources.getString("forgot_pass"), PasswordReminderView.class));
         layout.setAlignItems(Alignment.START);
 
         setAlignItems(Alignment.CENTER);

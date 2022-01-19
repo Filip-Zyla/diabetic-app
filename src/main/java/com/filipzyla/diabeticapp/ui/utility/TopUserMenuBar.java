@@ -1,6 +1,9 @@
 package com.filipzyla.diabeticapp.ui.utility;
 
 import com.filipzyla.diabeticapp.backend.security.SecurityService;
+import com.filipzyla.diabeticapp.ui.user.HistoryView;
+import com.filipzyla.diabeticapp.ui.user.HomeView;
+import com.filipzyla.diabeticapp.ui.user.SettingsView;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.Unit;
 import com.vaadin.flow.component.button.Button;
@@ -12,14 +15,14 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
-public class TopMenuBar extends HorizontalLayout {
+public class TopUserMenuBar extends HorizontalLayout {
 
-    public TopMenuBar(SecurityService securityService) {
+    public TopUserMenuBar(SecurityService securityService) {
         final ResourceBundle langResources = ResourceBundle.getBundle("lang.res");
 
-        Button buttonHomePage = new Button(langResources.getString("home"), new Icon(VaadinIcon.HOME), event -> UI.getCurrent().navigate("home"));
-        Button buttonHistory = new Button(langResources.getString("history"), new Icon(VaadinIcon.ARCHIVE), event -> UI.getCurrent().navigate("history"));
-        Button buttonSetting = new Button(langResources.getString("settings"), new Icon(VaadinIcon.OPTIONS), event -> UI.getCurrent().navigate("settings"));
+        Button buttonHomePage = new Button(langResources.getString("home"), new Icon(VaadinIcon.HOME), event -> UI.getCurrent().navigate(HomeView.class));
+        Button buttonHistory = new Button(langResources.getString("history"), new Icon(VaadinIcon.ARCHIVE), event -> UI.getCurrent().navigate(HistoryView.class));
+        Button buttonSetting = new Button(langResources.getString("settings"), new Icon(VaadinIcon.OPTIONS), event -> UI.getCurrent().navigate(SettingsView.class));
         Button buttonLogout = new Button(langResources.getString("logout"), new Icon(VaadinIcon.EXIT), event -> securityService.logout());
 
         Button buttonEnglish = new Button(langResources.getString("switch_en"), event -> {

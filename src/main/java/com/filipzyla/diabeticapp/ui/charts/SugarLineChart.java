@@ -13,6 +13,7 @@ import com.vaadin.flow.component.html.Div;
 
 public class SugarLineChart extends Div {
 
+    // service not repo!!!
     public SugarLineChart(SugarRepository sugarRepository) {
         ApexCharts sugarChart =
                 ApexChartsBuilder.get()

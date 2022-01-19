@@ -13,7 +13,7 @@ import com.filipzyla.diabeticapp.backend.service.SugarService;
 import com.filipzyla.diabeticapp.backend.service.UserService;
 import com.filipzyla.diabeticapp.backend.utility.CustomDateTimeFormatter;
 import com.filipzyla.diabeticapp.backend.utility.Validators;
-import com.filipzyla.diabeticapp.ui.utility.TopMenuBar;
+import com.filipzyla.diabeticapp.ui.utility.TopUserMenuBar;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.combobox.ComboBox;
@@ -27,7 +27,6 @@ import com.vaadin.flow.component.textfield.NumberField;
 import com.vaadin.flow.component.textfield.TextArea;
 import com.vaadin.flow.data.value.ValueChangeMode;
 import com.vaadin.flow.router.Route;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
@@ -36,7 +35,7 @@ import java.util.Optional;
 import java.util.ResourceBundle;
 
 @Route("home")
-public class MainUserView extends VerticalLayout {
+public class HomeView extends VerticalLayout {
 
     private final SugarService sugarService;
     private final InsulinService insulinService;
@@ -49,8 +48,7 @@ public class MainUserView extends VerticalLayout {
     private final VerticalLayout sugarLayout;
     private final VerticalLayout insulinLayout;
 
-    @Autowired
-    public MainUserView(SecurityService securityService, UserService userService, SugarService sugarService, InsulinService insulinService) {
+    public HomeView(SecurityService securityService, UserService userService, SugarService sugarService, InsulinService insulinService) {
         this.sugarService = sugarService;
         this.insulinService = insulinService;
 
@@ -63,7 +61,7 @@ public class MainUserView extends VerticalLayout {
         insulinLayout = new VerticalLayout();
 
         setAlignItems(Alignment.CENTER);
-        add(new TopMenuBar(securityService), addLastMeasurements(), addMeasurementLayout());
+        add(new TopUserMenuBar(securityService), addLastMeasurements(), addMeasurementLayout());
     }
 
     private Component addLastMeasurements() {

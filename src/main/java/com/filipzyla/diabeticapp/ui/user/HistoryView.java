@@ -11,7 +11,7 @@ import com.filipzyla.diabeticapp.backend.service.SugarService;
 import com.filipzyla.diabeticapp.backend.service.UserService;
 import com.filipzyla.diabeticapp.backend.utility.CustomDateTimeFormatter;
 import com.filipzyla.diabeticapp.backend.utility.Validators;
-import com.filipzyla.diabeticapp.ui.utility.TopMenuBar;
+import com.filipzyla.diabeticapp.ui.utility.TopUserMenuBar;
 import com.opencsv.CSVReader;
 import com.opencsv.exceptions.CsvException;
 import com.vaadin.flow.component.Component;
@@ -41,6 +41,7 @@ import com.vaadin.flow.data.renderer.ComponentRenderer;
 import com.vaadin.flow.data.value.ValueChangeMode;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.server.StreamResource;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
@@ -80,7 +81,7 @@ public class HistoryView extends VerticalLayout {
         layoutInsulin = new VerticalLayout();
         setAlignItems(Alignment.CENTER);
 
-        add(new TopMenuBar(securityService), new H2(langResources.getString("history")), datePeriodSelector(), historyGrid(), importExportButtons());
+        add(new TopUserMenuBar(securityService), new H2(langResources.getString("history")), datePeriodSelector(), historyGrid(), importExportButtons());
     }
 
     private Component datePeriodSelector() {
@@ -190,13 +191,21 @@ public class HistoryView extends VerticalLayout {
             }
         });
         Button buttonDelete = new Button(langResources.getString("delete"), delete -> {
-            sugarService.delete(sugar);
-            dialog.close();
-            refreshHistoryGrid();
+            Dialog deleteDialog = new Dialog();
+            deleteDialog.add(
+                    new Button(langResources.getString("yes"), event -> {
+                        sugarService.delete(sugar);
+                        deleteDialog.close();
+                        dialog.close();
+                        refreshHistoryGrid();
+                    }),
+                    new Button(langResources.getString("no"), event -> deleteDialog.close()));
+            deleteDialog.open();
         });
         Button buttonClose = new Button(langResources.getString("close"), close -> {
             dialog.close();
         });
+
         HorizontalLayout buttonLayout = new HorizontalLayout(buttonCommit, buttonDelete, buttonClose);
         buttonLayout.setJustifyContentMode(JustifyContentMode.CENTER);
 
@@ -247,13 +256,21 @@ public class HistoryView extends VerticalLayout {
             }
         });
         Button buttonDelete = new Button(langResources.getString("delete"), delete -> {
-            insulinService.delete(insulin);
-            dialog.close();
-            refreshHistoryGrid();
+            Dialog deleteDialog = new Dialog();
+            deleteDialog.add(
+                    new Button(langResources.getString("yes"), event -> {
+                        insulinService.delete(insulin);
+                        deleteDialog.close();
+                        dialog.close();
+                        refreshHistoryGrid();
+                    }),
+                    new Button(langResources.getString("no"), event -> deleteDialog.close()));
+            deleteDialog.open();
         });
         Button buttonClose = new Button(langResources.getString("close"), close -> {
             dialog.close();
         });
+
         HorizontalLayout buttonLayout = new HorizontalLayout(buttonCommit, buttonDelete, buttonClose);
         buttonLayout.setJustifyContentMode(JustifyContentMode.CENTER);
 
@@ -281,7 +298,8 @@ public class HistoryView extends VerticalLayout {
         return importExportLayout;
     }
 
-    private void uploadFile() {
+    @Transactional
+    public void uploadFile() {
         Dialog uploadWindow = new Dialog();
 
         MemoryBuffer buffer = new MemoryBuffer();
@@ -352,20 +370,27 @@ public class HistoryView extends VerticalLayout {
         checkboxGroup.addThemeVariants(CheckboxGroupVariant.LUMO_VERTICAL);
 
         Anchor anchor = new Anchor(new StreamResource("import_data.csv", () -> {
-            boolean sugar = checkboxGroup.isSelected("Sugar");
-            boolean insulin = checkboxGroup.isSelected("Insulin");
-            return measurementsToInputStream(sugar, insulin);
+            boolean sugar = checkboxGroup.isSelected(langResources.getString("sugar"));
+            boolean insulin = checkboxGroup.isSelected(langResources.getString("insulin"));
+            InputStream inputStream = InputStream.nullInputStream();
+            try {
+                inputStream = measurementsToInputStream(sugar, insulin);
+            } catch (IOException e) {
+                System.err.println("File creating fail");
+                Notification.show(langResources.getString("file_create_prob")).setPosition(Notification.Position.MIDDLE);
+            }
+            return inputStream;
         }), "");
         anchor.getElement().setAttribute("download", true);
         anchor.add(new Button(langResources.getString("save"), new Icon(VaadinIcon.DOWNLOAD), event -> downloadWindow.close()));
 
         VerticalLayout downloadLayout = new VerticalLayout();
         downloadLayout.add(checkboxGroup, anchor);
-        downloadWindow.open();
         downloadWindow.add(downloadLayout);
+        downloadWindow.open();
     }
 
-    private InputStream measurementsToInputStream(boolean sugar, boolean insulin) {
+    private InputStream measurementsToInputStream(boolean sugar, boolean insulin) throws IOException {
         InputStream sugarStream = InputStream.nullInputStream();
         if (sugar) {
             String[] sugarCsv = sugarList

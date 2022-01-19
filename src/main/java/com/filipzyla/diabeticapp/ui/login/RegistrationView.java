@@ -17,14 +17,14 @@ import com.vaadin.flow.router.Route;
 
 import java.util.ResourceBundle;
 
-@Route("register")
-public class RegisterView extends Composite {
+@Route("registration")
+public class RegistrationView extends Composite {
 
     private final UserService userService;
     private final ResourceBundle langResources;
 
 
-    public RegisterView(UserService userService) {
+    public RegistrationView(UserService userService) {
         this.userService = userService;
         langResources = ResourceBundle.getBundle("lang.res");
     }

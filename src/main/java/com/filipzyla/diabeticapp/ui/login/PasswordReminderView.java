@@ -15,12 +15,12 @@ import com.vaadin.flow.router.Route;
 
 import java.util.ResourceBundle;
 
-@Route("forgotPassword")
-public class ForgotPasswordView extends Composite {
+@Route("remindPass")
+public class PasswordReminderView extends Composite {
 
     private final UserService userService;
 
-    public ForgotPasswordView(UserService userService) {
+    public PasswordReminderView(UserService userService) {
         this.userService = userService;
     }
 

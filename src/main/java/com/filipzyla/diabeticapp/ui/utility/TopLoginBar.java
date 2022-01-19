@@ -1,5 +1,6 @@
 package com.filipzyla.diabeticapp.ui.utility;
 
+import com.filipzyla.diabeticapp.ui.login.LoginView;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.Unit;
 import com.vaadin.flow.component.button.Button;
@@ -15,7 +16,7 @@ public class TopLoginBar extends HorizontalLayout {
     public TopLoginBar() {
         final ResourceBundle langResources = ResourceBundle.getBundle("lang.res");
 
-        Button buttonHomePage = new Button(langResources.getString("home"), new Icon(VaadinIcon.HOME), event -> UI.getCurrent().navigate("login"));
+        Button buttonHomePage = new Button(langResources.getString("home"), new Icon(VaadinIcon.HOME), event -> UI.getCurrent().navigate(LoginView.class));
         Button buttonEnglish = new Button(langResources.getString("switch_en"), event -> {
             Locale.setDefault(new Locale("EN"));
             UI.getCurrent().getPage().reload();

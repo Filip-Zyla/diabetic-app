@@ -5,7 +5,7 @@ import com.filipzyla.diabeticapp.backend.security.SecurityService;
 import com.filipzyla.diabeticapp.backend.service.UserService;
 import com.filipzyla.diabeticapp.backend.utility.SugarDefaultSettings;
 import com.filipzyla.diabeticapp.backend.utility.Validators;
-import com.filipzyla.diabeticapp.ui.utility.TopMenuBar;
+import com.filipzyla.diabeticapp.ui.utility.TopUserMenuBar;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.dialog.Dialog;
@@ -58,7 +58,7 @@ public class SettingsView extends VerticalLayout {
         mainLayout.setAlignItems(Alignment.CENTER);
 
         setAlignItems(Alignment.CENTER);
-        add(new TopMenuBar(securityService), tabs, mainLayout);
+        add(new TopUserMenuBar(securityService), tabs, mainLayout);
     }
 
     private VerticalLayout sugarLayout(UserService userService) {
