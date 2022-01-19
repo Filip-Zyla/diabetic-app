@@ -1,10 +1,9 @@
 package com.filipzyla.diabeticapp.backend.enums;
 
 public enum SugarUnits {
-    MILLI_GRAM("mg/dl"),
-    MILLI_MOL("mmol/l");
+    MILLI_GRAM("mg/dl");
 
-    private String msg;
+    private final String msg;
 
     SugarUnits(String s) {
         msg = s;
