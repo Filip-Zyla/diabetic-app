@@ -213,6 +213,12 @@
             <artifactId>frontend-maven-plugin</artifactId>
             <version>1.12.1</version>
         </dependency>
+        <dependency>
+            <groupId>com.github.ulisesbocchio</groupId>
+            <artifactId>jasypt-spring-boot</artifactId>
+            <version>3.0.4</version>
+        </dependency>
+
     </dependencies>
 
     <build>
