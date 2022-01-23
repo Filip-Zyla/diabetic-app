@@ -30,26 +30,22 @@ public class Charts {
     private final User user;
     public final ResourceBundle langResources;
 
-    public int lastNDays;
-
     public Charts(UserService userService, SecurityService securityService, SugarService sugarService, InsulinService insulinService) {
         this.sugarService = sugarService;
         this.insulinService = insulinService;
 
         user = userService.findByUsername(securityService.getAuthenticatedUser());
         langResources = ResourceBundle.getBundle("lang.res");
-
-        sugarLineChart();
     }
 
-    public ApexCharts sugarCircleChart() {
+    public ApexCharts sugarCircleChart(int lastNDays) {
         ApexCharts pieChart = ApexChartsBuilder.get()
                 .withChart(ChartBuilder.get().withType(Type.pie).build())
                 .withLabels("Hipo", "Normal", "Hiper")
                 .withLegend(LegendBuilder.get()
                         .withPosition(Position.right)
                         .build())
-                .withSeries(getSugarsStates())
+                .withSeries(getSugarsStates(lastNDays))
                 .withResponsive(ResponsiveBuilder.get()
                         .withBreakpoint(480.0)
                         .withOptions(OptionsBuilder.get()
@@ -60,13 +56,13 @@ public class Charts {
                         .build())
                 .build();
         pieChart.setWidth("500px");
-        pieChart.setHeight("500px");
+        pieChart.setHeight("400px");
         return pieChart;
 
     }
 
-    private Double[] getSugarsStates() {
-        final List<Sugar> sugars = sugarService.findAllOrderByTimeBetweenDates(user.getUserId(), LocalDate.now().minusDays(14), LocalDate.now().plusDays(1));
+    public Double[] getSugarsStates(int lastNDays) {
+        final List<Sugar> sugars = sugarService.findAllOrderByTimeBetweenDates(user.getUserId(), LocalDate.now().minusDays(lastNDays), LocalDate.now().plusDays(1));
         long hipo = sugars.stream().filter(s -> s.getSugar() < user.getHypoglycemia()).count();
         long normal = sugars.stream().filter(s -> s.getSugar() > user.getHypoglycemia() && s.getSugar() < user.getHyperglycemiaAfterMeal()).count();
         long hiper = sugars.stream().filter(s -> s.getSugar() > user.getHyperglycemia()).count();
@@ -74,7 +70,7 @@ public class Charts {
         return new Double[]{(double) hipo, (double) normal, (double) hiper};
     }
 
-    public ApexCharts sugarLineChart() {
+    public ApexCharts sugarLineChart(int lastNDays) {
         ApexCharts sugarChart =
                 ApexChartsBuilder.get()
                         .withChart(
@@ -90,8 +86,8 @@ public class Charts {
                         .withStroke(
                                 StrokeBuilder.get().withCurve(Curve.straight).build()
                         )
-                        .withSeries(getSugars(sugarService))
-                        .withLabels(getDates(sugarService))
+                        .withSeries(getSugars(lastNDays))
+                        .withLabels(getDates(lastNDays))
                         .withXaxis(
                                 XAxisBuilder.get().withType(XAxisType.datetime).build()
                         )
@@ -107,14 +103,14 @@ public class Charts {
         return sugarChart;
     }
 
-    private Series getSugars(SugarService sugarService) {
-        final List<Sugar> sugars = sugarService.findAllOrderByTimeBetweenDates(user.getUserId(), LocalDate.now().minusDays(14), LocalDate.now().plusDays(1));
+    private Series getSugars(int lastNDays) {
+        final List<Sugar> sugars = sugarService.findAllOrderByTimeBetweenDates(user.getUserId(), LocalDate.now().minusDays(lastNDays), LocalDate.now().plusDays(1));
         Series series = new Series(sugars.stream().map(Sugar::getSugar).toArray());
         return series;
     }
 
-    private String[] getDates(SugarService sugarService) {
-        final List<Sugar> sugars = sugarService.findAllOrderByTimeBetweenDates(user.getUserId(), LocalDate.now().minusDays(14), LocalDate.now().plusDays(1));
+    private String[] getDates(int lastNDays) {
+        final List<Sugar> sugars = sugarService.findAllOrderByTimeBetweenDates(user.getUserId(), LocalDate.now().minusDays(lastNDays), LocalDate.now().plusDays(1));
         return sugars.stream().map(sugar -> sugar.getTime().toString()).toArray(String[]::new);
     }
 }

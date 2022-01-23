@@ -1,5 +1,6 @@
-- charts, history, sugar boundaries - colors, scroll vs pages
-    - home: last n days, line chart and circle chart), average
+- charts
+    - home average and statistic, refresh when adding
+    - sugar boundaries - colors, scroll vs pages
     - history
 - cookies vs cache
 - scheduled reports

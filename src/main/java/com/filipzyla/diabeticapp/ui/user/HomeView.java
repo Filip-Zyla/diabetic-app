@@ -24,6 +24,8 @@ import com.vaadin.flow.component.html.H5;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.component.tabs.Tab;
+import com.vaadin.flow.component.tabs.Tabs;
 import com.vaadin.flow.component.textfield.IntegerField;
 import com.vaadin.flow.component.textfield.TextArea;
 import com.vaadin.flow.data.value.ValueChangeMode;
@@ -31,10 +33,10 @@ import com.vaadin.flow.router.Route;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
 import java.util.ResourceBundle;
-import java.util.Set;
 
 @Route("home")
 public class HomeView extends VerticalLayout {
@@ -65,52 +67,7 @@ public class HomeView extends VerticalLayout {
         insulinLayout = new VerticalLayout();
 
         setAlignItems(Alignment.CENTER);
-        add(new TopUserMenuBar(securityService), addLastMeasurements(), getSugarLineChart(), addMeasurementLayout());
-    }
-
-    private Component getSugarLineChart() {
-        HorizontalLayout chartLayout = new HorizontalLayout();
-        chartLayout.setAlignItems(Alignment.CENTER);
-        chartLayout.add(charts.sugarLineChart());
-
-        ComboBox<String> lastNDaysBox = new ComboBox("Last days");
-        lastNDaysBox.setItems(Set.of("7", "14", "30", "90"));
-        lastNDaysBox.addValueChangeListener(event -> {
-            if (lastNDaysBox.getValue().equals("7")) {
-                charts.lastNDays = 7;
-            }
-            else if (lastNDaysBox.getValue().equals("30")) {
-                charts.lastNDays = 30;
-            }
-            else if (lastNDaysBox.getValue().equals("90")) {
-                charts.lastNDays = 90;
-            }
-            else {
-                charts.lastNDays = 14;
-            }
-        });
-
-        ComboBox<String> chartTypeBox = new ComboBox("Chart type");
-        chartTypeBox.setItems(Set.of("Line", "Circle"));
-        chartTypeBox.addValueChangeListener(event -> {
-            if (chartTypeBox.getValue().equals("Line")) {
-                chartLayout.removeAll();
-                chartLayout.add(charts.sugarLineChart());
-            }
-            else if (chartTypeBox.getValue().equals("Circle")) {
-                chartLayout.removeAll();
-                chartLayout.add(charts.sugarCircleChart());
-            }
-        });
-
-        VerticalLayout optionLayout = new VerticalLayout();
-        optionLayout.setAlignItems(Alignment.CENTER);
-        optionLayout.add(chartTypeBox, lastNDaysBox);
-
-        HorizontalLayout graphLayout = new HorizontalLayout();
-        graphLayout.setAlignItems(Alignment.CENTER);
-        graphLayout.add(chartLayout, optionLayout);
-        return graphLayout;
+        add(new TopUserMenuBar(securityService), addLastMeasurements(), chartsTabs(), addMeasurementLayout());
     }
 
     private Component addLastMeasurements() {
@@ -151,6 +108,42 @@ public class HomeView extends VerticalLayout {
             H5 labelTimeIns = new H5(insulinOpt.get().getTime().format(CustomDateTimeFormatter.formatter));
             lastInsulinLayout.add(labelInsulinMain, labelInsulin, labelTypeIns, labelTimeIns);
         }
+    }
+
+    private Component chartsTabs() {
+        HorizontalLayout tabLayout = new HorizontalLayout();
+        tabLayout.setAlignItems(Alignment.CENTER);
+        tabLayout.add(charts.sugarLineChart(14));
+
+        Tab lineChartTab = new Tab("Line chart");
+        Tab statisticsTab = new Tab("Statistics");
+        Tabs tabs = new Tabs(lineChartTab, statisticsTab);
+
+        ComboBox<String> lastNDaysBox = new ComboBox("Last days");
+        lastNDaysBox.setItems(List.of("7", "14", "30", "90"));
+        lastNDaysBox.setValue("14");
+        lastNDaysBox.addValueChangeListener(event -> {
+            tabLayout.removeAll();
+            tabLayout.add(charts.sugarCircleChart(Integer.parseInt(lastNDaysBox.getValue())), lastNDaysBox);
+        });
+
+        tabs.addSelectedChangeListener(event -> {
+                    tabLayout.removeAll();
+                    if (tabs.getSelectedTab().equals(lineChartTab)) {
+                        tabLayout.add(charts.sugarLineChart(Integer.parseInt(lastNDaysBox.getValue())));
+                    }
+                    else if (tabs.getSelectedTab().equals(statisticsTab)) {
+                        tabLayout.add(charts.sugarCircleChart(Integer.parseInt(lastNDaysBox.getValue())), lastNDaysBox);
+
+                    }
+                }
+        );
+        tabs.setSelectedTab(lineChartTab);
+
+        VerticalLayout outerLayout = new VerticalLayout();
+        outerLayout.add(tabs, tabLayout);
+        outerLayout.setAlignItems(Alignment.CENTER);
+        return outerLayout;
     }
 
     private Component addMeasurementLayout() {
