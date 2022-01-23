@@ -15,7 +15,7 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.tabs.Tab;
 import com.vaadin.flow.component.tabs.Tabs;
 import com.vaadin.flow.component.textfield.EmailField;
-import com.vaadin.flow.component.textfield.NumberField;
+import com.vaadin.flow.component.textfield.IntegerField;
 import com.vaadin.flow.component.textfield.PasswordField;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.Route;
@@ -30,7 +30,7 @@ public class SettingsView extends VerticalLayout {
     private final User user;
     private final VerticalLayout mainLayout;
 
-    public final ResourceBundle langResources;
+    private final ResourceBundle langResources;
 
     public SettingsView(SecurityService securityService, UserService userService) {
         user = userService.findByUsername(securityService.getAuthenticatedUser());
@@ -62,20 +62,20 @@ public class SettingsView extends VerticalLayout {
     }
 
     private VerticalLayout sugarLayout(UserService userService) {
-        NumberField hypoglycemia = new NumberField(langResources.getString("hypoglycemia"));
+        IntegerField hypoglycemia = new IntegerField(langResources.getString("hypoglycemia"));
         hypoglycemia.setValue(user.getHypoglycemia());
         hypoglycemia.setStep(1);
-        NumberField hyperglycemia = new NumberField(langResources.getString("before_meal"));
+        IntegerField hyperglycemia = new IntegerField(langResources.getString("before_meal"));
         hyperglycemia.setValue(user.getHyperglycemia());
         hyperglycemia.setStep(1);
-        NumberField hyperglycemiaAfterMeal = new NumberField(langResources.getString("after_meal"));
+        IntegerField hyperglycemiaAfterMeal = new IntegerField(langResources.getString("after_meal"));
         hyperglycemiaAfterMeal.setValue(user.getHyperglycemiaAfterMeal());
         hyperglycemiaAfterMeal.setStep(1);
 
         Button saveSugar = new Button(langResources.getString("save_changes"), event -> {
-            if (Validators.validateSugar(hypoglycemia.getValue().intValue())
-                    && Validators.validateSugar(hyperglycemia.getValue().intValue())
-                    && Validators.validateSugar(hyperglycemiaAfterMeal.getValue().intValue())) {
+            if (Validators.validateSugar(hypoglycemia.getValue())
+                    && Validators.validateSugar(hyperglycemia.getValue())
+                    && Validators.validateSugar(hyperglycemiaAfterMeal.getValue())) {
                 user.setHypoglycemia(hypoglycemia.getValue());
                 user.setHyperglycemia(hyperglycemia.getValue());
                 user.setHyperglycemiaAfterMeal(hyperglycemiaAfterMeal.getValue());

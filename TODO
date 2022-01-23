@@ -1,6 +1,8 @@
-- scheduled reports
-- graphs, charts, history, sugar boundaries - colors, cache, scroll vs pages
+- charts, history, sugar boundaries - colors, scroll vs pages
+    - home: last n days, line chart and circle chart), average
+    - history
 - cookies vs cache
+- scheduled reports
 - styling
 - tests (nexDoor), swagger, logs
 - heroku

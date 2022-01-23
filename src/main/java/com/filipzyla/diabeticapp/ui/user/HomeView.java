@@ -13,6 +13,7 @@ import com.filipzyla.diabeticapp.backend.service.SugarService;
 import com.filipzyla.diabeticapp.backend.service.UserService;
 import com.filipzyla.diabeticapp.backend.utility.CustomDateTimeFormatter;
 import com.filipzyla.diabeticapp.backend.utility.Validators;
+import com.filipzyla.diabeticapp.ui.charts.Charts;
 import com.filipzyla.diabeticapp.ui.utility.TopUserMenuBar;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.button.Button;
@@ -23,7 +24,7 @@ import com.vaadin.flow.component.html.H5;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
-import com.vaadin.flow.component.textfield.NumberField;
+import com.vaadin.flow.component.textfield.IntegerField;
 import com.vaadin.flow.component.textfield.TextArea;
 import com.vaadin.flow.data.value.ValueChangeMode;
 import com.vaadin.flow.router.Route;
@@ -33,6 +34,7 @@ import java.time.LocalDateTime;
 import java.util.Locale;
 import java.util.Optional;
 import java.util.ResourceBundle;
+import java.util.Set;
 
 @Route("home")
 public class HomeView extends VerticalLayout {
@@ -41,7 +43,8 @@ public class HomeView extends VerticalLayout {
     private final InsulinService insulinService;
 
     private final User user;
-    public final ResourceBundle langResources;
+    private final ResourceBundle langResources;
+    private final Charts charts;
 
     private final VerticalLayout lastSugarLayout;
     private final VerticalLayout lastInsulinLayout;
@@ -52,6 +55,7 @@ public class HomeView extends VerticalLayout {
         this.sugarService = sugarService;
         this.insulinService = insulinService;
 
+        charts = new Charts(userService, securityService, sugarService, insulinService);
         user = userService.findByUsername(securityService.getAuthenticatedUser());
         langResources = ResourceBundle.getBundle("lang.res");
 
@@ -61,7 +65,52 @@ public class HomeView extends VerticalLayout {
         insulinLayout = new VerticalLayout();
 
         setAlignItems(Alignment.CENTER);
-        add(new TopUserMenuBar(securityService), addLastMeasurements(), addMeasurementLayout());
+        add(new TopUserMenuBar(securityService), addLastMeasurements(), getSugarLineChart(), addMeasurementLayout());
+    }
+
+    private Component getSugarLineChart() {
+        HorizontalLayout chartLayout = new HorizontalLayout();
+        chartLayout.setAlignItems(Alignment.CENTER);
+        chartLayout.add(charts.sugarLineChart());
+
+        ComboBox<String> lastNDaysBox = new ComboBox("Last days");
+        lastNDaysBox.setItems(Set.of("7", "14", "30", "90"));
+        lastNDaysBox.addValueChangeListener(event -> {
+            if (lastNDaysBox.getValue().equals("7")) {
+                charts.lastNDays = 7;
+            }
+            else if (lastNDaysBox.getValue().equals("30")) {
+                charts.lastNDays = 30;
+            }
+            else if (lastNDaysBox.getValue().equals("90")) {
+                charts.lastNDays = 90;
+            }
+            else {
+                charts.lastNDays = 14;
+            }
+        });
+
+        ComboBox<String> chartTypeBox = new ComboBox("Chart type");
+        chartTypeBox.setItems(Set.of("Line", "Circle"));
+        chartTypeBox.addValueChangeListener(event -> {
+            if (chartTypeBox.getValue().equals("Line")) {
+                chartLayout.removeAll();
+                chartLayout.add(charts.sugarLineChart());
+            }
+            else if (chartTypeBox.getValue().equals("Circle")) {
+                chartLayout.removeAll();
+                chartLayout.add(charts.sugarCircleChart());
+            }
+        });
+
+        VerticalLayout optionLayout = new VerticalLayout();
+        optionLayout.setAlignItems(Alignment.CENTER);
+        optionLayout.add(chartTypeBox, lastNDaysBox);
+
+        HorizontalLayout graphLayout = new HorizontalLayout();
+        graphLayout.setAlignItems(Alignment.CENTER);
+        graphLayout.add(chartLayout, optionLayout);
+        return graphLayout;
     }
 
     private Component addLastMeasurements() {
@@ -109,6 +158,7 @@ public class HomeView extends VerticalLayout {
         comboBoxMeasurementType.setItems(MeasurementType.values());
         comboBoxMeasurementType.setWidth("200px");
         comboBoxMeasurementType.setItemLabelGenerator(type -> langResources.getString(type.getMsg()));
+        comboBoxMeasurementType.setClearButtonVisible(true);
 
         comboBoxMeasurementType.addValueChangeListener(event -> {
             insulinLayout.removeAll();
@@ -129,7 +179,7 @@ public class HomeView extends VerticalLayout {
     }
 
     private void addSugarLayout() {
-        NumberField numField = new NumberField(langResources.getString("sugar"));
+        IntegerField numField = new IntegerField(langResources.getString("sugar"));
         numField.setStep(1);
         numField.setWidth("140px");
         ComboBox<SugarType> comboBoxType = new ComboBox(langResources.getString("type"));
@@ -153,8 +203,8 @@ public class HomeView extends VerticalLayout {
             if (numField.isEmpty() || comboBoxType.isEmpty()) {
                 Notification.show(langResources.getString("empty_fields")).setPosition(Notification.Position.MIDDLE);
             }
-            else if (Validators.validateSugar(numField.getValue().intValue())) {
-                Sugar sugar = new Sugar(numField.getValue().intValue(), comboBoxType.getValue(), dateTimePicker.getValue(), textAreaNote.getValue(), user);
+            else if (Validators.validateSugar(numField.getValue())) {
+                Sugar sugar = new Sugar(numField.getValue(), comboBoxType.getValue(), dateTimePicker.getValue(), textAreaNote.getValue(), user);
                 sugarService.save(sugar);
                 Notification.show(langResources.getString("saved")).setPosition(Notification.Position.MIDDLE);
                 numField.setValue(null);
@@ -180,7 +230,7 @@ public class HomeView extends VerticalLayout {
     }
 
     private void addInsulinLayout() {
-        NumberField numField = new NumberField(langResources.getString("insulin"));
+        IntegerField numField = new IntegerField(langResources.getString("insulin"));
         numField.setStep(1);
         numField.setWidth("200px");
         ComboBox<InsulinType> comboBoxType = new ComboBox(langResources.getString("type"));
@@ -204,8 +254,8 @@ public class HomeView extends VerticalLayout {
             if (numField.isEmpty() || comboBoxType.isEmpty()) {
                 Notification.show(langResources.getString("empty_fields")).setPosition(Notification.Position.MIDDLE);
             }
-            else if (Validators.validateInsulin(numField.getValue().intValue())) {
-                Insulin insulin = new Insulin(numField.getValue().intValue(), comboBoxType.getValue(), dateTimePicker.getValue(), textAreaNote.getValue(), user);
+            else if (Validators.validateInsulin(numField.getValue())) {
+                Insulin insulin = new Insulin(numField.getValue(), comboBoxType.getValue(), dateTimePicker.getValue(), textAreaNote.getValue(), user);
                 insulinService.save(insulin);
                 Notification.show(langResources.getString("saved")).setPosition(Notification.Position.MIDDLE);
                 numField.setValue(null);

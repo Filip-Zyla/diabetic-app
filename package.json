@@ -65,9 +65,11 @@
     "@vaadin/vaadin-usage-statistics": "2.1.0",
     "@webcomponents/shadycss": "1.8.0",
     "@webcomponents/webcomponentsjs": "^2.2.10",
+    "apexcharts": "3.30.0",
     "construct-style-sheets-polyfill": "2.4.16",
     "lit-element": "2.5.1",
-    "lit-html": "1.4.1"
+    "lit-html": "1.4.1",
+    "onecolor": "3.1.0"
   },
   "devDependencies": {
     "babel-loader": "8.2.2",
@@ -154,9 +156,11 @@
       "@vaadin/vaadin-usage-statistics": "2.1.0",
       "@webcomponents/shadycss": "1.8.0",
       "@webcomponents/webcomponentsjs": "^2.2.10",
+      "apexcharts": "3.30.0",
       "construct-style-sheets-polyfill": "2.4.16",
       "lit-element": "2.5.1",
-      "lit-html": "1.4.1"
+      "lit-html": "1.4.1",
+      "onecolor": "3.1.0"
     },
     "devDependencies": {
       "babel-loader": "8.2.2",
@@ -178,6 +182,6 @@
       "webpack-dev-server": "3.11.0",
       "webpack-merge": "4.2.2"
     },
-    "hash": "ba6e4e7397325136c6ffc20d74638e5eb34f55ac595f616cfc628b6774ef8ea0"
+    "hash": "c2480324cf35c30a21bca7d0fc73ad1634cd7484457bd531841eaf47d25c7f03"
   }
 }
