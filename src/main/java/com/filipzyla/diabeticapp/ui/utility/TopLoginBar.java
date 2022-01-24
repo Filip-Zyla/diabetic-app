@@ -4,6 +4,7 @@ import com.filipzyla.diabeticapp.ui.login.LoginView;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.Unit;
 import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
@@ -21,10 +22,12 @@ public class TopLoginBar extends HorizontalLayout {
             Locale.setDefault(new Locale("EN"));
             UI.getCurrent().getPage().reload();
         });
+        buttonEnglish.addThemeVariants(ButtonVariant.LUMO_SMALL, ButtonVariant.LUMO_PRIMARY);
         Button buttonPolish = new Button(langResources.getString("switch_pl"), event -> {
             Locale.setDefault(new Locale("PL"));
             UI.getCurrent().getPage().reload();
         });
+        buttonPolish.addThemeVariants(ButtonVariant.LUMO_SMALL, ButtonVariant.LUMO_PRIMARY);
 
         setHeight(50, Unit.PIXELS);
         setWidthFull();
