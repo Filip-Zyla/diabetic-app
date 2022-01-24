@@ -1,6 +1,5 @@
-- scheduled reports
-- graphs, charts, history, sugar boundaries - colors, cache, scroll vs pages
 - cookies vs cache
+- scheduled reports
 - styling
 - tests (nexDoor), swagger, logs
 - heroku

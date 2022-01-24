@@ -32,13 +32,13 @@ public class User {
     private SugarUnits units;
 
     @Column(nullable = false, scale = 1)
-    private Double hypoglycemia;
+    private Integer hypoglycemia;
 
     @Column(nullable = false, scale = 1)
-    private Double hyperglycemia;
+    private Integer hyperglycemia;
 
     @Column(nullable = false, scale = 1)
-    private Double hyperglycemiaAfterMeal;
+    private Integer hyperglycemiaAfterMeal;
 
     public User(String username, String pass, String email) {
         this.email = email;

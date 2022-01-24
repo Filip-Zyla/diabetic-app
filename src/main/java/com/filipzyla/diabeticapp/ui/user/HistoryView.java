@@ -32,7 +32,7 @@ import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
-import com.vaadin.flow.component.textfield.NumberField;
+import com.vaadin.flow.component.textfield.IntegerField;
 import com.vaadin.flow.component.textfield.TextArea;
 import com.vaadin.flow.component.upload.Upload;
 import com.vaadin.flow.component.upload.UploadI18N;
@@ -60,7 +60,7 @@ public class HistoryView extends VerticalLayout {
     private final InsulinService insulinService;
 
     private final User user;
-    public final ResourceBundle langResources;
+    private final ResourceBundle langResources;
 
     private final VerticalLayout layoutSugar;
     private final VerticalLayout layoutInsulin;
@@ -152,7 +152,7 @@ public class HistoryView extends VerticalLayout {
         Dialog dialog = new Dialog();
         dialog.open();
 
-        NumberField numField = new NumberField(langResources.getString("sugar"));
+        IntegerField numField = new IntegerField(langResources.getString("sugar"));
         numField.setStep(1);
         ComboBox<SugarType> comboBoxType = new ComboBox(langResources.getString("type"));
         comboBoxType.setItems(SugarType.values());
@@ -168,7 +168,7 @@ public class HistoryView extends VerticalLayout {
             e.getSource().setHelperText(e.getValue().length() + "/" + 255);
         });
 
-        numField.setValue(Double.valueOf(sugar.getSugar()));
+        numField.setValue(sugar.getSugar());
         comboBoxType.setValue(sugar.getType());
         dateTimePicker.setValue(sugar.getTime());
         textAreaNote.setValue(sugar.getNote());
@@ -177,8 +177,8 @@ public class HistoryView extends VerticalLayout {
         dialogLayout.add(numField, comboBoxType, dateTimePicker, textAreaNote);
 
         Button buttonCommit = new Button(langResources.getString("save"), save -> {
-            if (Validators.validateSugar(numField.getValue().intValue())) {
-                sugar.setSugar(numField.getValue().intValue());
+            if (Validators.validateSugar(numField.getValue())) {
+                sugar.setSugar(numField.getValue());
                 sugar.setType(comboBoxType.getValue());
                 sugar.setTime(dateTimePicker.getValue());
                 sugar.setNote(textAreaNote.getValue());
@@ -217,7 +217,7 @@ public class HistoryView extends VerticalLayout {
         Dialog dialog = new Dialog();
         dialog.open();
 
-        NumberField numField = new NumberField(langResources.getString("insulin"));
+        IntegerField numField = new IntegerField(langResources.getString("insulin"));
         numField.setStep(1);
         ComboBox<InsulinType> comboBox = new ComboBox(langResources.getString("type"));
         comboBox.setItems(InsulinType.values());
@@ -233,7 +233,7 @@ public class HistoryView extends VerticalLayout {
             e.getSource().setHelperText(e.getValue().length() + "/" + 255);
         });
 
-        numField.setValue(Double.valueOf(insulin.getInsulin()));
+        numField.setValue(insulin.getInsulin());
         comboBox.setValue(insulin.getType());
         dateTimePicker.setValue(insulin.getTime());
         textAreaNote.setValue(insulin.getNote());
@@ -242,8 +242,8 @@ public class HistoryView extends VerticalLayout {
         dialogLayout.add(numField, comboBox, dateTimePicker, textAreaNote);
 
         Button buttonCommit = new Button(langResources.getString("save"), save -> {
-            if (Validators.validateInsulin(numField.getValue().intValue())) {
-                insulin.setInsulin(numField.getValue().intValue());
+            if (Validators.validateInsulin(numField.getValue())) {
+                insulin.setInsulin(numField.getValue());
                 insulin.setType(comboBox.getValue());
                 insulin.setTime(dateTimePicker.getValue());
                 insulin.setNote(textAreaNote.getValue());
