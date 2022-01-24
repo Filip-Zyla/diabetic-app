@@ -20,6 +20,7 @@ import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.datetimepicker.DateTimePicker;
 import com.vaadin.flow.component.html.H3;
+import com.vaadin.flow.component.html.H4;
 import com.vaadin.flow.component.html.H5;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
@@ -32,6 +33,7 @@ import com.vaadin.flow.data.value.ValueChangeMode;
 import com.vaadin.flow.router.Route;
 
 import java.time.Duration;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Locale;
@@ -57,7 +59,7 @@ public class HomeView extends VerticalLayout {
         this.sugarService = sugarService;
         this.insulinService = insulinService;
 
-        charts = new Charts(userService, securityService, sugarService, insulinService);
+        charts = new Charts(userService, securityService);
         user = userService.findByUsername(securityService.getAuthenticatedUser());
         langResources = ResourceBundle.getBundle("lang.res");
 
@@ -111,39 +113,58 @@ public class HomeView extends VerticalLayout {
     }
 
     private Component chartsTabs() {
+        final List<Sugar>[] sugars = new List[]{sugarService.findAllOrderByTimeBetweenDates(user.getUserId(), LocalDate.now().minusDays(14), LocalDate.now().plusDays(1))};
+
         HorizontalLayout tabLayout = new HorizontalLayout();
         tabLayout.setAlignItems(Alignment.CENTER);
-        tabLayout.add(charts.sugarLineChart(14));
+        tabLayout.add(charts.sugarLineChart(sugars[0]));
 
-        Tab lineChartTab = new Tab("Line chart");
-        Tab statisticsTab = new Tab("Statistics");
-        Tabs tabs = new Tabs(lineChartTab, statisticsTab);
+        VerticalLayout statisticsLayout = new VerticalLayout();
+        statisticsLayout.setAlignItems(Alignment.CENTER);
 
-        ComboBox<String> lastNDaysBox = new ComboBox("Last days");
+        ComboBox<String> lastNDaysBox = new ComboBox(langResources.getString("last_days"));
         lastNDaysBox.setItems(List.of("7", "14", "30", "90"));
         lastNDaysBox.setValue("14");
         lastNDaysBox.addValueChangeListener(event -> {
+            sugars[0] = sugarService.findAllOrderByTimeBetweenDates(user.getUserId(), LocalDate.now().minusDays(Long.parseLong(lastNDaysBox.getValue())), LocalDate.now().plusDays(1));
             tabLayout.removeAll();
-            tabLayout.add(charts.sugarCircleChart(Integer.parseInt(lastNDaysBox.getValue())), lastNDaysBox);
+            statisticsLayout.removeAll();
+            tabLayout.add(charts.sugarCircleChart(sugars[0]), statisticsLayout);
+            statisticsLayout.add(lastNDaysBox,
+                    new H4(langResources.getString("average") + ": " + getSugarAverage(sugars[0])),
+                    new H4(langResources.getString("amount") + ": " + sugars[0].size()));
         });
 
+        Tab lineChartTab = new Tab(langResources.getString("statistics"));
+        Tab statisticsTab = new Tab(langResources.getString("line_chart"));
+        Tabs tabs = new Tabs(lineChartTab, statisticsTab);
         tabs.addSelectedChangeListener(event -> {
-                    tabLayout.removeAll();
-                    if (tabs.getSelectedTab().equals(lineChartTab)) {
-                        tabLayout.add(charts.sugarLineChart(Integer.parseInt(lastNDaysBox.getValue())));
-                    }
-                    else if (tabs.getSelectedTab().equals(statisticsTab)) {
-                        tabLayout.add(charts.sugarCircleChart(Integer.parseInt(lastNDaysBox.getValue())), lastNDaysBox);
-
-                    }
-                }
-        );
+            tabLayout.removeAll();
+            if (tabs.getSelectedTab().equals(lineChartTab)) {
+                tabLayout.add(charts.sugarLineChart(sugars[0]));
+            }
+            else if (tabs.getSelectedTab().equals(statisticsTab)) {
+                statisticsLayout.removeAll();
+                statisticsLayout.add(lastNDaysBox,
+                        new H4(langResources.getString("average") + ": " + getSugarAverage(sugars[0])),
+                        new H4(langResources.getString("amount") + ": " + sugars[0].size()));
+                tabLayout.add(charts.sugarCircleChart(sugars[0]), statisticsLayout);
+            }
+        });
         tabs.setSelectedTab(lineChartTab);
+
+        statisticsLayout.add(lastNDaysBox,
+                new H4(langResources.getString("average") + ": " + getSugarAverage(sugars[0])),
+                new H4(langResources.getString("amount") + ": " + sugars[0].size()));
 
         VerticalLayout outerLayout = new VerticalLayout();
         outerLayout.add(tabs, tabLayout);
         outerLayout.setAlignItems(Alignment.CENTER);
         return outerLayout;
+    }
+
+    private Integer getSugarAverage(List<Sugar> sugars) {
+        return sugars.stream().mapToInt(Sugar::getSugar).sum() / sugars.size();
     }
 
     private Component addMeasurementLayout() {

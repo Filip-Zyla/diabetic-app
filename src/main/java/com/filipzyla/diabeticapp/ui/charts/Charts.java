@@ -1,51 +1,51 @@
 package com.filipzyla.diabeticapp.ui.charts;
 
+import com.filipzyla.diabeticapp.backend.enums.SugarType;
 import com.filipzyla.diabeticapp.backend.models.Sugar;
 import com.filipzyla.diabeticapp.backend.models.User;
 import com.filipzyla.diabeticapp.backend.security.SecurityService;
-import com.filipzyla.diabeticapp.backend.service.InsulinService;
-import com.filipzyla.diabeticapp.backend.service.SugarService;
 import com.filipzyla.diabeticapp.backend.service.UserService;
 import com.github.appreciated.apexcharts.ApexCharts;
 import com.github.appreciated.apexcharts.ApexChartsBuilder;
+import com.github.appreciated.apexcharts.config.Annotations;
+import com.github.appreciated.apexcharts.config.DiscretePoint;
+import com.github.appreciated.apexcharts.config.Markers;
+import com.github.appreciated.apexcharts.config.annotations.YAxisAnnotations;
 import com.github.appreciated.apexcharts.config.builder.*;
 import com.github.appreciated.apexcharts.config.chart.Type;
 import com.github.appreciated.apexcharts.config.chart.builder.ZoomBuilder;
 import com.github.appreciated.apexcharts.config.legend.HorizontalAlign;
 import com.github.appreciated.apexcharts.config.legend.Position;
+import com.github.appreciated.apexcharts.config.markers.Shape;
 import com.github.appreciated.apexcharts.config.responsive.builder.OptionsBuilder;
 import com.github.appreciated.apexcharts.config.stroke.Curve;
 import com.github.appreciated.apexcharts.config.xaxis.XAxisType;
 import com.github.appreciated.apexcharts.helper.Series;
 
-import java.time.LocalDate;
+import java.util.Collections;
 import java.util.List;
 import java.util.ResourceBundle;
 
 public class Charts {
 
-    private final SugarService sugarService;
-    private final InsulinService insulinService;
-
     private final User user;
     public final ResourceBundle langResources;
 
-    public Charts(UserService userService, SecurityService securityService, SugarService sugarService, InsulinService insulinService) {
-        this.sugarService = sugarService;
-        this.insulinService = insulinService;
-
+    public Charts(UserService userService, SecurityService securityService) {
         user = userService.findByUsername(securityService.getAuthenticatedUser());
         langResources = ResourceBundle.getBundle("lang.res");
     }
 
-    public ApexCharts sugarCircleChart(int lastNDays) {
+    public ApexCharts sugarCircleChart(List<Sugar> sugars) {
         ApexCharts pieChart = ApexChartsBuilder.get()
                 .withChart(ChartBuilder.get().withType(Type.pie).build())
-                .withLabels("Hipo", "Normal", "Hiper")
+                .withLabels(langResources.getString("hypoglycemia"),
+                        langResources.getString("normal"),
+                        langResources.getString("hyperglycemia"))
                 .withLegend(LegendBuilder.get()
                         .withPosition(Position.right)
                         .build())
-                .withSeries(getSugarsStates(lastNDays))
+                .withSeries(getSugarsStatistics(sugars))
                 .withResponsive(ResponsiveBuilder.get()
                         .withBreakpoint(480.0)
                         .withOptions(OptionsBuilder.get()
@@ -57,21 +57,32 @@ public class Charts {
                 .build();
         pieChart.setWidth("500px");
         pieChart.setHeight("400px");
+        pieChart.setColors("#EA0E0E", "#0EEA22", "#EAE00E");
         return pieChart;
 
     }
 
-    public Double[] getSugarsStates(int lastNDays) {
-        final List<Sugar> sugars = sugarService.findAllOrderByTimeBetweenDates(user.getUserId(), LocalDate.now().minusDays(lastNDays), LocalDate.now().plusDays(1));
-        long hipo = sugars.stream().filter(s -> s.getSugar() < user.getHypoglycemia()).count();
-        long normal = sugars.stream().filter(s -> s.getSugar() > user.getHypoglycemia() && s.getSugar() < user.getHyperglycemiaAfterMeal()).count();
-        long hiper = sugars.stream().filter(s -> s.getSugar() > user.getHyperglycemia()).count();
+    public Double[] getSugarsStatistics(List<Sugar> sugars) {
+        long hipo = sugars.stream()
+                .filter(s -> s.getSugar() < user.getHypoglycemia()).count();
+        long beforeHiper = sugars.stream()
+                .filter(s -> s.getType() != SugarType.AFTER_MEAL)
+                .filter(s -> s.getSugar() > user.getHyperglycemia()).count();
+        long beforeNormal = sugars.stream()
+                .filter(s -> s.getType() != SugarType.AFTER_MEAL)
+                .filter(s -> s.getSugar() >= user.getHypoglycemia() && s.getSugar() <= user.getHyperglycemia()).count();
+        long afterHiper = sugars.stream()
+                .filter(s -> s.getType() == SugarType.AFTER_MEAL)
+                .filter(s -> s.getSugar() > user.getHyperglycemiaAfterMeal()).count();
+        long afterNormal = sugars.stream()
+                .filter(s -> s.getType() == SugarType.AFTER_MEAL)
+                .filter(s -> s.getSugar() > user.getHypoglycemia() && s.getSugar() < user.getHyperglycemiaAfterMeal()).count();
 
-        return new Double[]{(double) hipo, (double) normal, (double) hiper};
+        return new Double[]{(double) hipo, (double) beforeNormal + afterNormal, (double) beforeHiper + afterHiper};
     }
 
-    public ApexCharts sugarLineChart(int lastNDays) {
-        ApexCharts sugarChart =
+    public ApexCharts sugarLineChart(List<Sugar> sugars) {
+        ApexCharts lineChart =
                 ApexChartsBuilder.get()
                         .withChart(
                                 ChartBuilder.get()
@@ -86,31 +97,49 @@ public class Charts {
                         .withStroke(
                                 StrokeBuilder.get().withCurve(Curve.straight).build()
                         )
-                        .withSeries(getSugars(lastNDays))
-                        .withLabels(getDates(lastNDays))
+                        .withSeries(new Series(langResources.getString("sugar"), sugars.stream().map(Sugar::getSugar).toArray()))
+                        .withLabels(sugars.stream().map(s -> s.getTime().toString()).toArray(String[]::new))
                         .withXaxis(
                                 XAxisBuilder.get().withType(XAxisType.datetime).build()
                         )
                         .withYaxis(
-                                YAxisBuilder.get().withMin(0).withMax(500).withOpposite(true).build()
+                                YAxisBuilder.get().withMin(30).withMax(sugars.stream().mapToInt(Sugar::getSugar).max().getAsInt() + 30).withOpposite(true).build()
                         )
                         .withLegend(
                                 LegendBuilder.get().withHorizontalAlign(HorizontalAlign.left).build()
                         ).build();
-        sugarChart.setWidth("1000px");
-        sugarChart.setHeight("400px");
+        lineChart.setWidth("1000px");
+        lineChart.setHeight("400px");
+        lineChart.setMarkers(getMarkers());
+        lineChart.setAnnotations(getAnnotations());
 
-        return sugarChart;
+        return lineChart;
     }
 
-    private Series getSugars(int lastNDays) {
-        final List<Sugar> sugars = sugarService.findAllOrderByTimeBetweenDates(user.getUserId(), LocalDate.now().minusDays(lastNDays), LocalDate.now().plusDays(1));
-        Series series = new Series(sugars.stream().map(Sugar::getSugar).toArray());
-        return series;
+    private Annotations getAnnotations() {
+        Annotations annotations = new Annotations();
+        final YAxisAnnotations y = new YAxisAnnotations();
+        y.setY(Double.valueOf(user.getHypoglycemia()));
+        y.setY2(Double.valueOf(user.getHyperglycemiaAfterMeal()));
+        y.setBorderColor("#2DF542");
+        y.setFillColor("#2DF542");
+        annotations.setYaxis(List.of(y));
+        return annotations;
     }
 
-    private String[] getDates(int lastNDays) {
-        final List<Sugar> sugars = sugarService.findAllOrderByTimeBetweenDates(user.getUserId(), LocalDate.now().minusDays(lastNDays), LocalDate.now().plusDays(1));
-        return sugars.stream().map(sugar -> sugar.getTime().toString()).toArray(String[]::new);
+    private Markers getMarkers() {
+        Markers markers = new Markers();
+        markers.setSize(new Double[]{5.0});
+        markers.setStrokeColor("#B50EEA");
+        markers.setColors(Collections.singletonList("#B50EEA"));
+        markers.setStrokeWidth(2.0);
+        markers.setStrokeOpacity(0.9);
+        markers.setFillOpacity(0.0);
+        markers.setDiscrete(new DiscretePoint[]{});
+        markers.setShape(Shape.circle);
+        markers.setRadius(2.0);
+        markers.setOffsetX(0.0);
+        markers.setOffsetY(0.0);
+        return markers;
     }
 }
