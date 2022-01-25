@@ -13,7 +13,7 @@ import com.filipzyla.diabeticapp.backend.service.SugarService;
 import com.filipzyla.diabeticapp.backend.service.UserService;
 import com.filipzyla.diabeticapp.backend.utility.CustomDateTimeFormatter;
 import com.filipzyla.diabeticapp.backend.utility.Validators;
-import com.filipzyla.diabeticapp.ui.charts.Charts;
+import com.filipzyla.diabeticapp.ui.utility.Charts;
 import com.filipzyla.diabeticapp.ui.utility.TopUserMenuBar;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.button.Button;
@@ -114,6 +114,10 @@ public class HomeView extends VerticalLayout {
 
     private Component chartsTabs() {
         final List<Sugar>[] sugars = new List[]{sugarService.findAllOrderByTimeBetweenDates(user.getUserId(), LocalDate.now().minusDays(14), LocalDate.now().plusDays(1))};
+
+        if (sugars[0].isEmpty()) {
+            return new VerticalLayout();
+        }
 
         HorizontalLayout tabLayout = new HorizontalLayout();
         tabLayout.setAlignItems(Alignment.CENTER);

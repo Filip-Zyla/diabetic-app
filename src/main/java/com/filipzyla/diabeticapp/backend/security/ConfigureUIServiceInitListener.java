@@ -31,10 +31,10 @@ public class ConfigureUIServiceInitListener implements VaadinServiceInitListener
         else if (!LoginView.class.equals(event.getNavigationTarget()) && !SecurityUtils.isUserLoggedIn()) {
             event.rerouteTo(LoginView.class);
         }
-        else if (SecurityUtils.isUserLoggedIn() &&
-                (RegistrationView.class.equals(event.getNavigationTarget())
-                        || PasswordReminderView.class.equals(event.getNavigationTarget())
-                        || LoginView.class.equals(event.getNavigationTarget()))
+        else if (SecurityUtils.isUserLoggedIn()
+                && (RegistrationView.class.equals(event.getNavigationTarget())
+                || PasswordReminderView.class.equals(event.getNavigationTarget())
+                || LoginView.class.equals(event.getNavigationTarget()))
         ) {
             event.rerouteTo(HomeView.class);
         }

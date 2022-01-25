@@ -1,4 +1,4 @@
-package com.filipzyla.diabeticapp.ui.defaultViews;
+package com.filipzyla.diabeticapp.ui.utility.defaultViews;
 
 import com.filipzyla.diabeticapp.ui.user.HomeView;
 import com.vaadin.flow.component.html.Div;

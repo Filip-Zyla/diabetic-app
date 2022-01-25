@@ -65,7 +65,8 @@ public class HistoryView extends VerticalLayout {
     private final VerticalLayout layoutSugar;
     private final VerticalLayout layoutInsulin;
 
-    private DatePicker datePickerFrom, datePickerTo;
+    private DatePicker datePickerFrom;
+    private DatePicker datePickerTo;
 
     private List<Insulin> insulinList;
     private List<Sugar> sugarList;
@@ -318,7 +319,7 @@ public class HistoryView extends VerticalLayout {
         Button saveButton = new Button(langResources.getString("save"), new Icon(VaadinIcon.UPLOAD), event -> {
             if (!upload.isUploading()) {
                 InputStream inputStream = buffer.getInputStream();
-                InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
+                InputStreamReader inputStreamReader = new InputStreamReader(inputStream, StandardCharsets.UTF_8);
                 CSVReader csvReader = new CSVReader(inputStreamReader);
                 try {
                     processFile(csvReader);

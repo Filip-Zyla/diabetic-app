@@ -1,4 +1,4 @@
-package com.filipzyla.diabeticapp.ui.charts;
+package com.filipzyla.diabeticapp.ui.utility;
 
 import com.filipzyla.diabeticapp.backend.enums.SugarType;
 import com.filipzyla.diabeticapp.backend.models.Sugar;
@@ -29,14 +29,14 @@ import java.util.ResourceBundle;
 public class Charts {
 
     private final User user;
-    public final ResourceBundle langResources;
+    private final ResourceBundle langResources;
 
     public Charts(UserService userService, SecurityService securityService) {
         user = userService.findByUsername(securityService.getAuthenticatedUser());
         langResources = ResourceBundle.getBundle("lang.res");
     }
 
-    public ApexCharts sugarCircleChart(List<Sugar> sugars) {
+    public ApexCharts sugarCircleChart(final List<Sugar> sugars) {
         ApexCharts pieChart = ApexChartsBuilder.get()
                 .withChart(ChartBuilder.get().withType(Type.pie).build())
                 .withLabels(langResources.getString("hypoglycemia"),
@@ -62,7 +62,7 @@ public class Charts {
 
     }
 
-    public Double[] getSugarsStatistics(List<Sugar> sugars) {
+    public Double[] getSugarsStatistics(final List<Sugar> sugars) {
         long hipo = sugars.stream()
                 .filter(s -> s.getSugar() < user.getHypoglycemia()).count();
         long beforeHiper = sugars.stream()
@@ -81,7 +81,7 @@ public class Charts {
         return new Double[]{(double) hipo, (double) beforeNormal + afterNormal, (double) beforeHiper + afterHiper};
     }
 
-    public ApexCharts sugarLineChart(List<Sugar> sugars) {
+    public ApexCharts sugarLineChart(final List<Sugar> sugars) {
         ApexCharts lineChart =
                 ApexChartsBuilder.get()
                         .withChart(

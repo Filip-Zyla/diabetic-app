@@ -1,4 +1,4 @@
-package com.filipzyla.diabeticapp.ui.defaultViews;
+package com.filipzyla.diabeticapp.ui.utility.defaultViews;
 
 import com.vaadin.flow.router.*;
 
