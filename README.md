@@ -1,6 +1,7 @@
 # DiabApp
 
 #### App available at [heroku](https://diabetic-app.herokuapp.com/login) <br />
+It may take a while to boot up if app is down!
 
 ## Goal
 DiabApp it's my own web app for diabetics.
